@@ -30,7 +30,8 @@ try:
     driver.page_source
 
     print("sucess")
-    
-except Exception as e:
+
+except Exception as error:
+    print('An exception occurred: {}'.format(traceback.format_exc()))
     logging.error(traceback.format_exc())
     # Logs the error appropriately. 
