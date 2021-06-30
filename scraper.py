@@ -6,12 +6,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.firefox.options import Options
 from bs4 import BeautifulSoup
 
 try:
         
+    options = Options()
+    options.binary_location = r"/app/vendor/firefox/firefox"
     # Initialize a Firefox webdriver
-    driver = webdriver.Firefox(executable_path='/app/vendor/geckodriver/geckodriver')
+    driver = webdriver.Firefox(options=options, executable_path='/app/vendor/geckodriver/geckodriver')
 
     # Grab the web page
     driver.get("http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao")
