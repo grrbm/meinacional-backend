@@ -4,7 +4,13 @@
         "url": "https://github.com/heroku/heroku-buildpack-python"
         },
         {
-        "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+            "url": "http://github.com/buitron/firefox-buildpack"
+        },
+        {
+            "url": "http://github.com/buitron/geckodriver-buildpack"
+        },
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-nodejs"
         }
     ]
 }
