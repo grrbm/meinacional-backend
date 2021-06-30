@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 try:
         
     # Initialize a Firefox webdriver
-    driver = webdriver.Firefox(executable_path='/app/vendor/geckodriver/geckodriver')
+    driver = webdriver.Firefox(executable_path='/app/vendor/geckodriver')
 
     # Grab the web page
     driver.get("http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao")
