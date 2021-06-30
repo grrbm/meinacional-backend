@@ -36,7 +36,7 @@ try:
     # Instead of using requests.get, we just look at .page_source of the driver
     driver.page_source
 
-    print("sucess")
+    print(driver.page_source)
 
 except Exception as error:
     print('An exception occurred: {}'.format(traceback.format_exc()))
