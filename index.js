@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
-const {spawn} = require('child_process');
+const { spawn } = require('child_process');
 
 app.get('/', (req, res) => {
 
@@ -16,6 +16,10 @@ app.get('/', (req, res) => {
     dataToSend = data.toString();
   });
 
+  python.on('error', function(err) {
+    console.log('Oh noez, teh errurz: ' + err);
+    res.send(err)
+  });
   // in close event we are sure that stream from child process is closed
   python.on('close', (code) => {
     console.log(`child process close all stdio with code ${code}`);
