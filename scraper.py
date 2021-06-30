@@ -27,7 +27,7 @@ try:
     text_input.send_keys("38294699000112")
 
     # Now we can grab the search button and click it
-    search_button = driver.find_element_by_class_name("btn btn-success ladda-button")
+    search_button = driver.find_element_by_css_selector("button.btn.btn-success.ladda-button")
     search_button.click()
 
     # Instead of using requests.get, we just look at .page_source of the driver
