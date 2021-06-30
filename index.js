@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
   });
 
   python.on('error', function(err) {
-    console.log('Oh noez, teh errurz: ' + err);
+    console.log('There was an error while pipeing data: ' + err);
     res.send(err)
   });
   // in close event we are sure that stream from child process is closed
