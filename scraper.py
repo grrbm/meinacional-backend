@@ -7,4 +7,5 @@ page = requests.get('https://web.archive.org/web/20121007172955/http://www.nga.g
 
 soup = BeautifulSoup(page.text, 'html.parser')
 
+print('will print something')
 print(soup.get_text())

@@ -21,8 +21,8 @@ app.get('/', (req, res) => {
     res.send(err)
   });
   // in close event we are sure that stream from child process is closed
-  python.on('close', (code) => {
-    console.log(`child process close all stdio with code ${code}`);
+  python.on('close', (code, signal) => {
+    console.log(`child process close all stdio with code ${code} and signal ${signal}`);
     // send data to browser
     res.send(dataToSend)
   });
