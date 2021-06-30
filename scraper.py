@@ -6,13 +6,14 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import FirefoxOptions
 from bs4 import BeautifulSoup
 
 try:
         
-    options = Options()
+    options = FirefoxOptions()
     options.binary_location = r"/app/vendor/firefox/firefox"
+    options.add_argument("--headless")
     # Initialize a Firefox webdriver
     driver = webdriver.Firefox(options=options, executable_path='/app/vendor/geckodriver/geckodriver')
 
