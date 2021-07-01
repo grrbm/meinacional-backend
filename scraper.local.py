@@ -56,7 +56,35 @@ try:
     # Instead of using requests.get, we just look at .page_source of the driver
     driver.page_source
 
-    print(driver.page_source)
+    # We can feed that into Beautiful Soup
+    doc = BeautifulSoup(driver.page_source, "html.parser")
+
+    rows = doc.find('table', {"class": "table table-hover table-condensed emissao is-detailed"}).find_all('tr', attrs={'class': "pa"})
+
+    results = []
+    for row in rows:
+        cells = row.find_all("td")
+        print("this is cells amount: {}".format(len(cells)))
+        result = {
+            'periodo': cells[1].text,
+            'apurado': cells[2].text,
+            'beneficio_inss': cells[3].text,
+            'situacao': cells[5].text,
+            # 'principal': cells[6].text,
+            # 'multa': cells[7].text,
+            # 'juros': cells[8].text,
+            # 'total': cells[9].text,
+            # 'data_vencimento': cells[10].text,
+            # 'data_acolhimento': cells[11].text
+        }
+        results.append(result)
+
+
+    #print results
+    print(results)
+
+    # Close the webdriver
+    #driver.close()
 
 except Exception as error:
     print('An exception occurred: {}'.format(traceback.format_exc()))
