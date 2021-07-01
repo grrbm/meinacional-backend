@@ -1,3 +1,5 @@
+#time
+import time
 # errors
 import traceback
 import logging
@@ -23,9 +25,33 @@ try:
     # Then we'll fake typing into it
     text_input.send_keys("38294699000112")
 
+    #sleep
+    time.sleep(3)
+
     # Now we can grab the search button and click it
     search_button = driver.find_element_by_css_selector("button.btn.btn-success.ladda-button")
     search_button.click()
+
+    time.sleep(3)
+    emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
+    emit_das_tab.click()
+
+    time.sleep(1)
+    unclicked_dropdown = driver.find_element_by_css_selector("button.btn.dropdown-toggle.bs-placeholder.btn-default")
+    unclicked_dropdown.click()
+
+    time.sleep(1.2)
+    list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
+    size = len(list)
+    print("size of list = {}".format(size))
+
+    time.sleep(0.8)
+    list[-1].click()
+    
+    time.sleep(0.4)
+    ok_button = driver.find_element_by_css_selector('button.btn.btn-success.ladda-button')
+    ok_button.click()
+    
 
     # Instead of using requests.get, we just look at .page_source of the driver
     driver.page_source
