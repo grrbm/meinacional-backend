@@ -1,0 +1,24 @@
+1625085239371	geckodriver	INFO	Listening on 127.0.0.1:57907
+1625085349950	geckodriver	INFO	Listening on 127.0.0.1:49799
+1625085512721	geckodriver	INFO	Listening on 127.0.0.1:55478
+1625085515821	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "--no-sandbox" "--headless" "--disable-gpu" "--window-size=1920,1080" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileYnFxyr"
+1625085544913	geckodriver	INFO	Listening on 127.0.0.1:55512
+1625085547962	mozrunner::runner	INFO	Running command: "C:\\\\Program Files (x86)\\\\Mozilla Firefox\\\\firefox.exe" "--marionette" "--no-sandbox" "--headless" "--disable-gpu" "--window-size=1920,1080" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileDrilnk"
+1625085777633	geckodriver	INFO	Listening on 127.0.0.1:64335
+1625085780716	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "--no-sandbox" "--headless" "--disable-gpu" "--window-size=1920,1080" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofilehuGpWL"
+1625085958857	geckodriver	INFO	Listening on 127.0.0.1:64626
+1625085961949	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofiletO9GeX"
+1625158663061	geckodriver	INFO	Listening on 127.0.0.1:54572
+1625158667932	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileZ56iKl"
+1625158886034	geckodriver	INFO	Listening on 127.0.0.1:50098
+1625158889117	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileORVE2P"
+1625159427041	geckodriver	INFO	Listening on 127.0.0.1:53073
+1625159432109	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileaw17km"
+1625160734419	geckodriver	INFO	Listening on 127.0.0.1:51665
+1625160737655	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileCMftUa"
+1625162290070	geckodriver	INFO	Listening on 127.0.0.1:56720
+1625162293138	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileuZuZSF"
+1625162461128	geckodriver	INFO	Listening on 127.0.0.1:52379
+1625162464313	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "--no-sandbox" "--headless" "--disable-gpu" "--window-size=1920,1080" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofileev9HJ3"
+1625165878639	geckodriver	INFO	Listening on 127.0.0.1:52685
+1625165881672	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "--no-sandbox" "--headless" "--disable-gpu" "--window-size=1920,1080" "-foreground" "-no-remote" "-profile" "C:\\Users\\grrbm\\AppData\\Local\\Temp\\rust_mozprofile9Y3kLb"
