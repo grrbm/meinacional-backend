@@ -13,14 +13,8 @@ from bs4 import BeautifulSoup
 
 try:
         
-    options = FirefoxOptions()
-    options.binary_location = r"/app/vendor/firefox/firefox"
-    options.add_argument("--no-sandbox")
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")
-    # Initialize a Firefox webdriver
-    driver = webdriver.Firefox(options=options, executable_path='/app/vendor/geckodriver/geckodriver')
+    # Initialize a Chrome webdriver
+    driver = webdriver.Chrome()
 
     # Grab the web page
     driver.get("http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao")
