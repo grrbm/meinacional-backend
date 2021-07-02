@@ -24,16 +24,7 @@ app.get('/', (req, res) => {
   python.on('close', (code, signal) => {
     console.log(`child process close all stdio with code ${code} and signal ${signal}`);
     // send data to browser
-    try {
-      let parsed = JSON.parse(dataToSend);
-      res.status(200).send(parsed)
-    } catch(error){
-      res.status(500).send({
-        error: true,
-        message: dataToSend
-      })
-    }
-    
+    res.send(dataToSend)
   });
 })
 

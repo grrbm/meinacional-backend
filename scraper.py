@@ -32,7 +32,7 @@ try:
     search_button = driver.find_element_by_css_selector("button.btn.btn-success.ladda-button")
     search_button.click()
 
-    time.sleep(3)
+    time.sleep(6)
     emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
     emit_das_tab.click()
 
