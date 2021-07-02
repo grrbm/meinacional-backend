@@ -43,7 +43,7 @@ try:
     time.sleep(1.2)
     list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
     size = len(list)
-    print("size of list = {}".format(size))
+    #print("size of list = {}".format(size))
 
     time.sleep(0.8)
     list[-1].click()
@@ -64,7 +64,7 @@ try:
     results = []
     for row in rows:
         cells = row.find_all("td")
-        print("this is cells amount: {}".format(len(cells)))
+        #print("this is cells amount: {}".format(len(cells)))
         result = {
             'periodo': cells[1].getText().strip(),
             'apurado': cells[2].getText().strip(),
