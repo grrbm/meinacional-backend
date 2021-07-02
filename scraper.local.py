@@ -66,10 +66,10 @@ try:
         cells = row.find_all("td")
         print("this is cells amount: {}".format(len(cells)))
         result = {
-            'periodo': cells[1].text,
-            'apurado': cells[2].text,
-            'beneficio_inss': cells[3].text,
-            'situacao': cells[5].text,
+            'periodo': cells[1].getText().strip(),
+            'apurado': cells[2].getText().strip(),
+            'beneficio_inss': cells[3].getText().strip(),
+            'situacao': cells[5].getText().strip(),
             # 'principal': cells[6].text,
             # 'multa': cells[7].text,
             # 'juros': cells[8].text,
@@ -84,7 +84,7 @@ try:
     print(results)
 
     # Close the webdriver
-    #driver.close()
+    driver.close()
 
 except Exception as error:
     print('An exception occurred: {}'.format(traceback.format_exc()))
