@@ -1,5 +1,6 @@
 #time
 import time
+import undetected_chromedriver.v2 as uc
 # errors
 import traceback
 import logging
@@ -14,10 +15,11 @@ from bs4 import BeautifulSoup
 try:
         
     # Initialize a Chrome webdriver
-    driver = webdriver.Chrome()
+    #driver = webdriver.Chrome()
 
-    # Grab the web page
-    driver.get("http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao")
+    driver = uc.Chrome()
+    driver.get('http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao')
+
 
     # We use .find_element_by_id here because we know the id
     text_input = driver.find_element_by_id("cnpj")
