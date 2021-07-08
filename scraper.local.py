@@ -1,5 +1,6 @@
 #time
 import time
+import undetected_chromedriver.v2 as uc
 # errors
 import traceback
 import logging
@@ -9,15 +10,18 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import FirefoxOptions
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
 try:
         
     # Initialize a Chrome webdriver
-    driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
+    #driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
 
-    # Grab the web page
-    driver.get("http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao")
+    driver = uc.Chrome()
+    driver.get('http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao')
 
     # We use .find_element_by_id here because we know the id
     text_input = driver.find_element_by_id("cnpj")
@@ -33,7 +37,10 @@ try:
     search_button.click()
 
     time.sleep(3)
-    emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
+    emit_das_tab = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]'))
+    )
+    #emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
     emit_das_tab.click()
 
     time.sleep(1)
