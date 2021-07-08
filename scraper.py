@@ -13,6 +13,8 @@ from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 
 try:
@@ -38,10 +40,31 @@ try:
     search_button.click()
 
     time.sleep(3)
-    emit_das_tab = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]'))
-    )
+    # emit_das_tab = WebDriverWait(driver, 10).until(
+    #     lambda driver: driver.find_element(By.XPATH,'//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]') or driver.find_element(By.CSS_SELECTOR,'div.toast-message')
+    # )
     #emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
+
+    try:
+        emit_das_tab = WebDriverWait(driver, 10).until(
+            lambda driver: driver.find_element(By.XPATH,'//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]') or driver.find_element(By.CSS_SELECTOR,'div.toast-message')
+        )
+    except TimeoutException as exception:
+        print("there was a TIMEOUT EXCEPTION ! gonna pass")
+        pass
+
+    #check if detected
+    try:
+        toast_message = driver.find_element_by_css_selector("div.toast-message")
+        raise RuntimeError('chrome driver was detected by the site ! '+toast_message.text)
+    except RuntimeError as error:
+        #chrome driver was detected by the site
+        print(error)
+        raise
+    except NoSuchElementException as error:
+        print('Great. No toast message found. Continuing')
+        pass
+
     emit_das_tab.click()
 
     time.sleep(1)
@@ -97,4 +120,5 @@ try:
 except Exception as error:
     print('An exception occurred: {}'.format(traceback.format_exc()))
     logging.error(traceback.format_exc())
+    driver.close()
     # Logs the error appropriately. 
