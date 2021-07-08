@@ -10,6 +10,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import FirefoxOptions
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
 try:
@@ -34,8 +37,11 @@ try:
     search_button = driver.find_element_by_css_selector("button.btn.btn-success.ladda-button")
     search_button.click()
 
-    time.sleep(6)
-    emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
+    time.sleep(3)
+    emit_das_tab = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]'))
+    )
+    #emit_das_tab = driver.find_element_by_xpath('//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
     emit_das_tab.click()
 
     time.sleep(1)
