@@ -113,13 +113,25 @@ try:
 
     time.sleep(5)
 
+    driver.execute_script(
+        # "window.scrollBy({ top: document.body.scrollHeight, behavior: 'smooth' });"
+        "window.scrollBy({ top: 300, behavior: 'smooth' });"
+    )
+    time.sleep(1.5)
+
     checkboxText = "Agosto/2021"
     checkbox = driver.find_element_by_xpath(
         ".//*[contains(text(), '" + checkboxText + "')]/preceding-sibling::td"
     )
     checkbox.click()
 
-    time.sleep(5)
+    time.sleep(0.5)
+
+    driver.execute_script(
+        "window.scrollBy({ top: document.body.scrollHeight, behavior: 'smooth' });"
+    )
+
+    time.sleep(3)
 
     button_generate_DAS = driver.find_element_by_id("btnEmitirDas")
     button_generate_DAS.click()
