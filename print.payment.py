@@ -53,7 +53,7 @@ try:
     text_input.send_keys("38294699000112")
 
     # sleep
-    time.sleep(2)
+    time.sleep(3)
 
     # Now we can grab the search button and click it
     search_button = driver.find_element_by_css_selector(
@@ -61,7 +61,7 @@ try:
     )
     search_button.click()
 
-    time.sleep(2)
+    time.sleep(3)
     # emit_das_tab = WebDriverWait(driver, 10).until(
     #     lambda driver: driver.find_element(By.XPATH,'//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
     #                    or driver.find_element(By.CSS_SELECTOR,'div.toast-message'
@@ -131,11 +131,12 @@ try:
     # )
 
     # time.sleep(3)
+    time.sleep(0.5)
 
     button_generate_DAS = driver.find_element_by_id("btnEmitirDas")
     button_generate_DAS.click()
 
-    time.sleep(5)
+    time.sleep(6)
 
     printDASbutton = driver.find_element(
         By.XPATH,
