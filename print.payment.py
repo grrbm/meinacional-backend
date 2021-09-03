@@ -1,3 +1,11 @@
+# PyPDF2
+import PyPDF2
+
+# os
+import glob
+import os
+import re
+
 # time
 import time
 import undetected_chromedriver.v2 as uc
@@ -21,6 +29,8 @@ from bs4 import BeautifulSoup
 
 try:
 
+    # DOWNLOAD directory
+    download_dir = r"C:\Users\grrbm\Downloads"
     # Initialize a Chrome webdriver
 
     # driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
@@ -125,6 +135,28 @@ try:
 
     printDASbutton.click()
 
+    time.sleep(5)
+
+    os.chdir(download_dir)
+
+    full_list = []
+    for file in glob.glob("DAS-PGMEI*.pdf"):
+        full_list.append(file)
+
+    found_file = full_list[len(full_list) - 1]
+
+    pathToRead = download_dir + "/" + found_file
+    print("path to read = " + pathToRead)
+    opened_pdf = PyPDF2.PdfFileReader(pathToRead, "rb")
+
+    p = opened_pdf.getPage(0)
+
+    p_text = p.extractText()
+    result = re.search("Página:/(.*)AUTENTICAÇÃO MECÂNICA", p_text)
+
+    num_boleto = result.group(1)
+
+    print(num_boleto)
     time.sleep(500)
 
     # Close the webdriver
