@@ -30,7 +30,8 @@ from bs4 import BeautifulSoup
 try:
 
     # DOWNLOAD directory
-    download_dir = r"C:\Users\grrbm\Downloads"
+    # If local: download_dir = r"C:\Users\grrbm\Downloads"
+    download_dir = r"/tmp"
     # Initialize a Chrome webdriver
 
     # driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
