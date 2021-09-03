@@ -53,7 +53,7 @@ try:
     text_input.send_keys("38294699000112")
 
     # sleep
-    time.sleep(3)
+    time.sleep(2)
 
     # Now we can grab the search button and click it
     search_button = driver.find_element_by_css_selector(
@@ -61,7 +61,7 @@ try:
     )
     search_button.click()
 
-    time.sleep(3)
+    time.sleep(2)
     # emit_das_tab = WebDriverWait(driver, 10).until(
     #     lambda driver: driver.find_element(By.XPATH,'//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
     #                    or driver.find_element(By.CSS_SELECTOR,'div.toast-message'
