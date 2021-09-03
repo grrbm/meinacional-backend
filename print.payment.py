@@ -135,7 +135,7 @@ try:
     button_generate_DAS = driver.find_element_by_id("btnEmitirDas")
     button_generate_DAS.click()
 
-    time.sleep(3)
+    time.sleep(5)
 
     printDASbutton = driver.find_element(
         By.XPATH,
