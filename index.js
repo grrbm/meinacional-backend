@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const { spawn } = require("child_process");
 
-app.get("/", (req, res) => {
+app.get("/paymentCode", (req, res) => {
   var dataToSend;
   // spawn new child process to call the python script
   const python = spawn("python", ["scraper.py"]);
@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/paymentCode", (req, res) => {
+app.get("/", (req, res) => {
   var dataToSend;
   // spawn new child process to call the python script
   const python = spawn("python", ["print.payment.py"]);
