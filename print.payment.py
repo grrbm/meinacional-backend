@@ -33,7 +33,7 @@ try:
     if "PRODUCTION" in os.environ:
         on_heroku = True
 
-    download_dir = r"~" if on_heroku else r"C:\Users\grrbm\Downloads"
+    download_dir = r"/app" if on_heroku else r"C:\Users\grrbm\Downloads"
     # Initialize a Chrome webdriver
 
     # driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
