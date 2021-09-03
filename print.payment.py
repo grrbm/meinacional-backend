@@ -34,7 +34,11 @@ try:
     # Initialize a Chrome webdriver
 
     # driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
-    driver = uc.Chrome()
+    # attempting headless
+    options = uc.ChromeOptions()
+    options.headless = True
+    options.add_argument("--headless")
+    driver = uc.Chrome(options=options)
     driver.get(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
     )
