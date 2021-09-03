@@ -29,9 +29,11 @@ from bs4 import BeautifulSoup
 
 try:
 
-    # DOWNLOAD directory
-    # If local: download_dir = r"C:\Users\grrbm\Downloads"
-    download_dir = r"/tmp"
+    on_heroku = False
+    if "PRODUCTION" in os.environ:
+        on_heroku = True
+
+    download_dir = r"/tmp" if on_heroku else r"C:\Users\grrbm\Downloads"
     # Initialize a Chrome webdriver
 
     # driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
@@ -51,7 +53,7 @@ try:
     text_input.send_keys("38294699000112")
 
     # sleep
-    time.sleep(3)
+    time.sleep(2)
 
     # Now we can grab the search button and click it
     search_button = driver.find_element_by_css_selector(
@@ -59,7 +61,7 @@ try:
     )
     search_button.click()
 
-    time.sleep(3)
+    time.sleep(2)
     # emit_das_tab = WebDriverWait(driver, 10).until(
     #     lambda driver: driver.find_element(By.XPATH,'//a[@href="'+'/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao'+'"]')
     #                    or driver.find_element(By.CSS_SELECTOR,'div.toast-message'
@@ -116,12 +118,6 @@ try:
     )
     ok_button.click()
 
-    time.sleep(5)
-
-    driver.execute_script(
-        # "window.scrollBy({ top: document.body.scrollHeight, behavior: 'smooth' });"
-        "window.scrollBy({ top: 300, behavior: 'smooth' });"
-    )
     time.sleep(1.5)
 
     checkboxText = "Agosto/2021"
@@ -130,18 +126,16 @@ try:
     )
     checkbox.click()
 
-    time.sleep(0.5)
+    # driver.execute_script(
+    #     "window.scrollBy({ top: document.body.scrollHeight, behavior: 'smooth' });"
+    # )
 
-    driver.execute_script(
-        "window.scrollBy({ top: document.body.scrollHeight, behavior: 'smooth' });"
-    )
-
-    time.sleep(3)
+    # time.sleep(3)
 
     button_generate_DAS = driver.find_element_by_id("btnEmitirDas")
     button_generate_DAS.click()
 
-    time.sleep(5)
+    time.sleep(3)
 
     printDASbutton = driver.find_element(
         By.XPATH,
@@ -174,7 +168,6 @@ try:
     num_boleto = result.group(1)
 
     print(num_boleto)
-    time.sleep(500)
 
     # Close the webdriver
     driver.close()
