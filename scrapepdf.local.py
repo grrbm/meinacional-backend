@@ -35,9 +35,13 @@ time.sleep(3)
 
 autoit.send("{ENTER}")
 
+time.sleep(2)
+
+autoit.send("!y")
+
 time.sleep(10)
 
-file_name = "Boleto Simples Nacional.pdf"
+file_name = "38294699000112.pdf"
 pathToRead = download_dir + "/" + file_name
 print("path to read = " + pathToRead)
 opened_pdf = PyPDF2.PdfFileReader(pathToRead, "rb")
