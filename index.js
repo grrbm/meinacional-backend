@@ -3,6 +3,13 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const { spawn } = require("child_process");
+const kue = require("kue");
+const { Queue } = require("kue");
+
+let REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
+const queue = kue.createQueue({
+  redis: REDIS_URL,
+});
 
 app.get("/", (req, res) => {
   var dataToSend;
@@ -30,6 +37,35 @@ app.get("/", (req, res) => {
 });
 
 app.get("/paymentCode", (req, res) => {
+  const job = queue
+    .create("mytype", {
+      letter: "a",
+      title: "mytitle",
+      job: jobToPerform,
+    })
+    .removeOnComplete(true)
+    .save((error) => {
+      if (error) {
+        next(error);
+        return;
+      }
+      job.on("complete", (result) => {
+        res.send(`Hello Intense ${result}`);
+      });
+      job.on("failed", () => {
+        const failedError = new Error("failed");
+        next(failedError);
+      });
+    });
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
+
+//----------------FUNCTION------------------------------
+
+function jobToPerform() {
   var dataToSend;
   // spawn new child process to call the python script
   const python = spawn("python", ["print.payment.py"]);
@@ -52,8 +88,4 @@ app.get("/paymentCode", (req, res) => {
     // send data to browser
     res.send(dataToSend);
   });
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+}

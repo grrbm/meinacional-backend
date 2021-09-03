@@ -4,6 +4,22 @@
     "repository": "https://github.com/grrbm/meinacional-backend",
     "logo": "https://node-js-sample.herokuapp.com/node.png",
     "keywords": ["node", "express", "static"],
+    "formation": {
+        "web": {
+          "quantity": 1
+        },
+        "worker": {
+          "quantity": 1
+        }
+      },
+    "addons": [{
+        "plan": "heroku-postgresql:hobby-dev",
+        "options": {
+          "version": "10"
+        }
+      }, {
+        "plan": "heroku-redis:hobby-dev"
+      }],
     "buildpacks": [
         {
         "url": "https://github.com/heroku/heroku-buildpack-python"
