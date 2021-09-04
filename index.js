@@ -41,6 +41,7 @@ app.get("/paymentCode", (req, res) => {
     .create("mytype", {
       letter: "a",
       title: "mytitle",
+      monthYear: "Agosto/2021",
       job: jobToPerform,
     })
     .removeOnComplete(true)

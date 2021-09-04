@@ -5,6 +5,7 @@ import PyPDF2
 import glob
 import os
 import re
+import sys
 
 # time
 import time
@@ -120,7 +121,7 @@ try:
 
     time.sleep(1.5)
 
-    checkboxText = "Agosto/2021"
+    checkboxText = sys.argv[1]
     checkbox = driver.find_element_by_xpath(
         ".//*[contains(text(), '" + checkboxText + "')]/preceding-sibling::td"
     )
