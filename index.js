@@ -49,7 +49,7 @@ app.post("/paymentCode", (req, res) => {
     .create("mytype", {
       letter: "a",
       title: "mytitle",
-      monthYear: req.monthYear,
+      monthYear: req.body.monthYear,
       job: jobToPerform,
     })
     .removeOnComplete(true)
