@@ -5,11 +5,16 @@ const port = process.env.PORT || 3000;
 const { spawn } = require("child_process");
 const kue = require("kue");
 const { Queue } = require("kue");
+const bodyParser = require("body-parser");
 
 let REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 const queue = kue.createQueue({
   redis: REDIS_URL,
 });
+
+app
+  .use(bodyParser.json({ limit: "50mb" }))
+  .use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.get("/", (req, res) => {
   var dataToSend;
@@ -36,12 +41,15 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/paymentCode", (req, res) => {
+app.post("/paymentCode", (req, res) => {
+  if (!req.body.monthYear) {
+    return res.status(400).send("You need to supply monthYear parameter");
+  }
   const job = queue
     .create("mytype", {
       letter: "a",
       title: "mytitle",
-      monthYear: "Agosto/2021",
+      monthYear: req.monthYear,
       job: jobToPerform,
     })
     .removeOnComplete(true)
