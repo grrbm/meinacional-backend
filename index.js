@@ -45,6 +45,7 @@ app.post("/paymentCode", (req, res) => {
   if (!req.body.monthYear) {
     return res.status(400).send("You need to supply monthYear parameter");
   }
+  console.log("got paymendCode request");
   const job = queue
     .create("mytype", {
       letter: "a",
