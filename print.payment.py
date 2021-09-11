@@ -165,11 +165,27 @@ try:
     p = opened_pdf.getPage(0)
 
     p_text = p.extractText()
-    result = re.search("Página:/(.*)AUTENTICAÇÃO MECÂNICA", p_text)
-
-    num_boleto = result.group(1)
+    # print(p_text)
+    num_boleto = re.search("Página:/(.*)AUTENTICAÇÃO MECÂNICA", p_text).group(1)
+    valor_doc = re.search("Valor Total do Documento(.*)CNPJRazão Social", p_text).group(
+        1
+    )
+    data_pagamento = re.search("Razão Social(.*)CódigoPrincipal", p_text).group(1)[:-10]
+    data_vencimento = re.search("Razão Social(.*)CódigoPrincipal", p_text).group(1)[
+        -10:
+    ]
+    # num_boleto = result.group(1)
 
     print(num_boleto)
+    print("$")
+    print(data_pagamento)
+    print("$")
+    print(data_vencimento)
+    print("$")
+    print(valor_doc)
+    print("$")
+    # print(valor_doc)
+    # print(p_text)
 
     # Close the webdriver
     driver.close()
