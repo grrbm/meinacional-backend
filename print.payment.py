@@ -175,15 +175,10 @@ try:
         -10:
     ]
     # num_boleto = result.group(1)
-
-    print(num_boleto)
-    print("$")
-    print(data_pagamento)
-    print("$")
-    print(data_vencimento)
-    print("$")
-    print(valor_doc)
-    print("$")
+    print(num_boleto, end="$")
+    print(data_pagamento, end="$")
+    print(data_vencimento, end="$")
+    print(valor_doc, end="$")
     # print(valor_doc)
     # print(p_text)
 
