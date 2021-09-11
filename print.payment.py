@@ -174,13 +174,18 @@ try:
     data_vencimento = re.search("Razão Social(.*)CódigoPrincipal", p_text).group(1)[
         -10:
     ]
+    return_string = ""
     # num_boleto = result.group(1)
-    print(num_boleto, end="$")
-    print(data_pagamento, end="$")
-    print(data_vencimento, end="$")
-    print(valor_doc, end="$")
-    # print(valor_doc)
-    # print(p_text)
+    return_string+=num_boleto
+    return_string+="$"
+    return_string+=data_pagamento
+    return_string+="$"
+    return_string+=data_vencimento
+    return_string+="$"
+    return_string+=valor_doc
+    return_string+="$"
+    
+    print(return_string)
 
     # Close the webdriver
     driver.close()
