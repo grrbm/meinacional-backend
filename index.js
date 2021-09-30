@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,9 +13,13 @@ const queue = kue.createQueue({
   redis: REDIS_URL,
 });
 
-app
-  .use(bodyParser.json({ limit: "50mb" }))
-  .use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+// --------------------------------------------------------------------
+// ROUTES
+// --------------------------------------------------------------------
+
+const UserRouter = require("./database/routers/user");
+const proxy = "";
+app.use(proxy, UserRouter);
 
 app.get("/", (req, res) => {
   var dataToSend;
