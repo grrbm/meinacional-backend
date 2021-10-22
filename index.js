@@ -30,7 +30,7 @@ app.use(proxy, UserRouter);
 app.get("/", (req, res) => {
   var dataToSend;
   // spawn new child process to call the python script
-  const python = spawn("python", ["scraper.py"]);
+  const python = spawn("python", ["scraper.py", "38294699000112"]);
 
   // collect data from script
   python.stdout.on("data", function (data) {
