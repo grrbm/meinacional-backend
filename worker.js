@@ -10,7 +10,7 @@ try {
   queue.process("mytype", async (job, done) => {
     switch (job.data.letter) {
       case "a":
-        const result = await jobToPerform(job.data.monthYear);
+        const result = await jobToPerform(job.data.cnpj, job.data.monthYear);
         done(null, "apple " + result);
         break;
       default:
@@ -21,11 +21,11 @@ try {
   console.log(error);
 }
 
-async function jobToPerform(monthYear) {
+async function jobToPerform(cnpj, monthYear) {
   return new Promise((resolve, reject) => {
     var dataToSend;
     // spawn new child process to call the python script
-    const python = spawn("python", ["print.payment.py", monthYear]);
+    const python = spawn("python", ["print.payment.py", cnpj, monthYear]);
 
     // collect data from script
     python.stdout.on("data", function (data) {

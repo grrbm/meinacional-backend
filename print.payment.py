@@ -40,8 +40,8 @@ try:
     # driver = webdriver.Chrome(executable_path=r'C:\Python38\ChromeDriver\chromedriver')
     # attempting headless
     options = uc.ChromeOptions()
-    options.headless = True
-    options.add_argument("--headless")
+    # options.headless = True
+    # options.add_argument("--headless")
     driver = uc.Chrome(options=options)
     driver.get(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
@@ -50,8 +50,11 @@ try:
     # We use .find_element_by_id here because we know the id
     text_input = driver.find_element_by_id("cnpj")
 
+    # get cnpj from arguments
+    cnpj_argument = sys.argv[1]
+
     # Then we'll fake typing into it
-    text_input.send_keys("38294699000112")
+    text_input.send_keys(cnpj_argument)
 
     # sleep
     time.sleep(2)
@@ -121,9 +124,11 @@ try:
 
     time.sleep(1.5)
 
-    checkboxText = sys.argv[1]
+    # get monthYear from arguments
+    monthYear_argument = sys.argv[2]
+
     checkbox = driver.find_element_by_xpath(
-        ".//*[contains(text(), '" + checkboxText + "')]/preceding-sibling::td"
+        ".//*[contains(text(), '" + monthYear_argument + "')]/preceding-sibling::td"
     )
     checkbox.click()
 
@@ -176,15 +181,15 @@ try:
     ]
     return_string = ""
     # num_boleto = result.group(1)
-    return_string+=num_boleto
-    return_string+="$"
-    return_string+=data_pagamento
-    return_string+="$"
-    return_string+=data_vencimento
-    return_string+="$"
-    return_string+=valor_doc
-    return_string+="$"
-    
+    return_string += num_boleto
+    return_string += "$"
+    return_string += data_pagamento
+    return_string += "$"
+    return_string += data_vencimento
+    return_string += "$"
+    return_string += valor_doc
+    return_string += "$"
+
     print(return_string)
 
     # Close the webdriver
