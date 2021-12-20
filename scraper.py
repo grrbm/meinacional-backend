@@ -11,6 +11,7 @@ import logging
 
 # Imports, of course
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
@@ -31,7 +32,7 @@ try:
     options = uc.ChromeOptions()
     options.headless = True
     options.add_argument("--headless")
-    driver = uc.Chrome(options=options)
+    driver = uc.Chrome(executable_path=ChromeDriverManager().install(), options=options)
     driver.get(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
     )
