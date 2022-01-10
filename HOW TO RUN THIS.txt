@@ -17,3 +17,7 @@ Obs: If you just want to see how the script works in your browser:
             options.add_argument("--headless")
   iii) run script:
             py scraper.py <CNPJ>
+
+Obs2: If you want to check payment code:
+  Run: 
+      py print.payment.py 38294699000112 Dezembro/2021           
