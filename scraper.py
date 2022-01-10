@@ -91,56 +91,60 @@ try:
 
     emit_das_tab.click()
 
-    time.sleep(1)
-    unclicked_dropdown = driver.find_element_by_css_selector(
-        "button.btn.dropdown-toggle.bs-placeholder.btn-default"
-    )
-    unclicked_dropdown.click()
+    i = 1
+    while i <= 2:
 
-    time.sleep(1.2)
-    list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
-    size = len(list)
-    # print("size of list = {}".format(size))
+        time.sleep(1)
+        unclicked_dropdown = driver.find_element_by_css_selector(
+            "button.btn.dropdown-toggle.btn-default"
+        )
+        unclicked_dropdown.click()
 
-    time.sleep(0.8)
-    list[-1].click()
+        time.sleep(1.2)
+        list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
+        size = len(list)
+        # print("size of list = {}".format(size))
 
-    time.sleep(0.4)
-    ok_button = driver.find_element_by_css_selector(
-        "button.btn.btn-success.ladda-button"
-    )
-    ok_button.click()
+        time.sleep(0.8)
+        list[-i].click()
 
-    # Instead of using requests.get, we just look at .page_source of the driver
-    driver.page_source
+        time.sleep(0.4)
+        ok_button = driver.find_element_by_css_selector(
+            "button.btn.btn-success.ladda-button"
+        )
+        ok_button.click()
 
-    # We can feed that into Beautiful Soup
-    doc = BeautifulSoup(driver.page_source, "html.parser")
+        # Instead of using requests.get, we just look at .page_source of the driver
+        driver.page_source
 
-    rows = doc.find(
-        "table", {"class": "table table-hover table-condensed emissao is-detailed"}
-    ).find_all("tr", attrs={"class": "pa"})
+        # We can feed that into Beautiful Soup
+        doc = BeautifulSoup(driver.page_source, "html.parser")
 
-    results = []
-    for row in rows:
-        cells = row.find_all("td")
-        # print("this is cells amount: {}".format(len(cells)))
-        result = {
-            "periodo": cells[1].getText().strip(),
-            "apurado": cells[2].getText().strip(),
-            "beneficio_inss": cells[3].getText().strip(),
-            "situacao": cells[5].getText().strip(),
-            # 'principal': cells[6].text,
-            # 'multa': cells[7].text,
-            # 'juros': cells[8].text,
-            # 'total': cells[9].text,
-            # 'data_vencimento': cells[10].text,
-            # 'data_acolhimento': cells[11].text
-        }
-        results.append(result)
+        rows = doc.find(
+            "table", {"class": "table table-hover table-condensed emissao is-detailed"}
+        ).find_all("tr", attrs={"class": "pa"})
 
-    # print results
-    print(results)
+        results = []
+        for row in rows:
+            cells = row.find_all("td")
+            # print("this is cells amount: {}".format(len(cells)))
+            result = {
+                "periodo": cells[1].getText().strip(),
+                "apurado": cells[2].getText().strip(),
+                "beneficio_inss": cells[3].getText().strip(),
+                "situacao": cells[5].getText().strip(),
+                # 'principal': cells[6].text,
+                # 'multa': cells[7].text,
+                # 'juros': cells[8].text,
+                # 'total': cells[9].text,
+                # 'data_vencimento': cells[10].text,
+                # 'data_acolhimento': cells[11].text
+            }
+            results.append(result)
+
+        # print results
+        print(results)
+        i += 1
 
     # Close the webdriver
     driver.close()
