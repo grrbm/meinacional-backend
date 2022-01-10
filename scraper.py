@@ -30,8 +30,8 @@ try:
 
     # attempting headless
     options = uc.ChromeOptions()
-    options.headless = True
-    options.add_argument("--headless")
+    # options.headless = True
+    # options.add_argument("--headless")
     driver = uc.Chrome(executable_path=ChromeDriverManager().install(), options=options)
     driver.get(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
@@ -91,56 +91,70 @@ try:
 
     emit_das_tab.click()
 
-    time.sleep(1)
-    unclicked_dropdown = driver.find_element_by_css_selector(
-        "button.btn.dropdown-toggle.bs-placeholder.btn-default"
-    )
-    unclicked_dropdown.click()
+    i = 1
+    while i <= 8:
 
-    time.sleep(1.2)
-    list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
-    size = len(list)
-    # print("size of list = {}".format(size))
+        time.sleep(1)
+        unclicked_dropdown = driver.find_element_by_css_selector(
+            "button.btn.dropdown-toggle.btn-default"
+        )
+        unclicked_dropdown.click()
 
-    time.sleep(0.8)
-    list[-1].click()
+        time.sleep(1.2)
+        list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
+        size = len(list)
+        if i >= size:
+            print("Fim da lista.")
+            break
+        # print("size of list = {}".format(size))
 
-    time.sleep(0.4)
-    ok_button = driver.find_element_by_css_selector(
-        "button.btn.btn-success.ladda-button"
-    )
-    ok_button.click()
+        time.sleep(0.8)
+        small = list[-i].find_element_by_css_selector("a span small.text-muted")
+        print("this is the small: ")
+        print(small.get_attribute("innerHTML"))
+        if small.get_attribute("innerHTML") == "Não optante":
+            print("O usuário foi não optante nesse ano.")
+            break
 
-    # Instead of using requests.get, we just look at .page_source of the driver
-    driver.page_source
+        list[-i].click()
 
-    # We can feed that into Beautiful Soup
-    doc = BeautifulSoup(driver.page_source, "html.parser")
+        time.sleep(0.4)
+        ok_button = driver.find_element_by_css_selector(
+            "button.btn.btn-success.ladda-button"
+        )
+        ok_button.click()
 
-    rows = doc.find(
-        "table", {"class": "table table-hover table-condensed emissao is-detailed"}
-    ).find_all("tr", attrs={"class": "pa"})
+        # Instead of using requests.get, we just look at .page_source of the driver
+        driver.page_source
 
-    results = []
-    for row in rows:
-        cells = row.find_all("td")
-        # print("this is cells amount: {}".format(len(cells)))
-        result = {
-            "periodo": cells[1].getText().strip(),
-            "apurado": cells[2].getText().strip(),
-            "beneficio_inss": cells[3].getText().strip(),
-            "situacao": cells[5].getText().strip(),
-            # 'principal': cells[6].text,
-            # 'multa': cells[7].text,
-            # 'juros': cells[8].text,
-            # 'total': cells[9].text,
-            # 'data_vencimento': cells[10].text,
-            # 'data_acolhimento': cells[11].text
-        }
-        results.append(result)
+        # We can feed that into Beautiful Soup
+        doc = BeautifulSoup(driver.page_source, "html.parser")
 
-    # print results
-    print(results)
+        rows = doc.find(
+            "table", {"class": "table table-hover table-condensed emissao is-detailed"}
+        ).find_all("tr", attrs={"class": "pa"})
+
+        results = []
+        for row in rows:
+            cells = row.find_all("td")
+            # print("this is cells amount: {}".format(len(cells)))
+            result = {
+                "periodo": cells[1].getText().strip(),
+                "apurado": cells[2].getText().strip(),
+                "beneficio_inss": cells[3].getText().strip(),
+                "situacao": cells[5].getText().strip(),
+                # 'principal': cells[6].text,
+                # 'multa': cells[7].text,
+                # 'juros': cells[8].text,
+                # 'total': cells[9].text,
+                # 'data_vencimento': cells[10].text,
+                # 'data_acolhimento': cells[11].text
+            }
+            results.append(result)
+
+        # print results
+        print(results)
+        i += 1
 
     # Close the webdriver
     driver.close()
