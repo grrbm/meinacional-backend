@@ -30,8 +30,8 @@ try:
 
     # attempting headless
     options = uc.ChromeOptions()
-    # options.headless = True
-    # options.add_argument("--headless")
+    options.headless = True
+    options.add_argument("--headless")
     driver = uc.Chrome(executable_path=ChromeDriverManager().install(), options=options)
     driver.get(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
