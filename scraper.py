@@ -30,8 +30,8 @@ try:
 
     # attempting headless
     options = uc.ChromeOptions()
-    options.headless = True
-    options.add_argument("--headless")
+    # options.headless = True
+    # options.add_argument("--headless")
     driver = uc.Chrome(executable_path=ChromeDriverManager().install(), options=options)
     driver.get(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
@@ -92,8 +92,11 @@ try:
     emit_das_tab.click()
 
     i = 1
-    while i <= 2:
+    while i <= 8:
 
+        if i < 0:
+            print("saindo porque i < 0")
+            break
         time.sleep(1)
         unclicked_dropdown = driver.find_element_by_css_selector(
             "button.btn.dropdown-toggle.btn-default"
@@ -106,6 +109,13 @@ try:
         # print("size of list = {}".format(size))
 
         time.sleep(0.8)
+        small = list[-i].find_element_by_css_selector("a span small.text-muted")
+        print("this is the small: ")
+        print(small.get_attribute("innerHTML"))
+        if small.get_attribute("innerHTML") == "Não optante":
+            print("O usuário foi não optante nesse ano.")
+            break
+
         list[-i].click()
 
         time.sleep(0.4)
