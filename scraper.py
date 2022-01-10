@@ -94,9 +94,6 @@ try:
     i = 1
     while i <= 8:
 
-        if i < 0:
-            print("saindo porque i < 0")
-            break
         time.sleep(1)
         unclicked_dropdown = driver.find_element_by_css_selector(
             "button.btn.dropdown-toggle.btn-default"
@@ -106,6 +103,9 @@ try:
         time.sleep(1.2)
         list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
         size = len(list)
+        if i >= size:
+            print("Fim da lista.")
+            break
         # print("size of list = {}".format(size))
 
         time.sleep(0.8)
