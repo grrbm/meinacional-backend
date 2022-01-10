@@ -91,6 +91,7 @@ try:
 
     emit_das_tab.click()
 
+    output_text = ""
     i = 1
     while i <= 8:
 
@@ -104,16 +105,16 @@ try:
         list = driver.find_elements_by_css_selector("ul.dropdown-menu.inner li")
         size = len(list)
         if i >= size:
-            print("Fim da lista.")
+            output_text += "Fim da lista."
             break
         # print("size of list = {}".format(size))
 
         time.sleep(0.8)
         small = list[-i].find_element_by_css_selector("a span small.text-muted")
-        print("this is the small: ")
-        print(small.get_attribute("innerHTML"))
+        output_text += "this is the small: "
+        output_text += small.get_attribute("innerHTML")
         if small.get_attribute("innerHTML") == "Não optante":
-            print("O usuário foi não optante nesse ano.")
+            output_text += "O usuário foi não optante nesse ano."
             break
 
         list[-i].click()
@@ -153,9 +154,10 @@ try:
             results.append(result)
 
         # print results
-        print(results)
+        output_text += str(results)
         i += 1
 
+    print(output_text)
     # Close the webdriver
     driver.close()
 
