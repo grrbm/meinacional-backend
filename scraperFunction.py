@@ -156,5 +156,5 @@ def scrapePage(driver, url, cnpj_argument):
     except Exception as error:
         print("An exception occurred: {}".format(traceback.format_exc()))
         logging.error(traceback.format_exc())
-        driver.close()
+        # driver.close()
         # Logs the error appropriately.
