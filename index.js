@@ -117,7 +117,7 @@ app.post("/sendCommand", (req, res) => {
     return res.status(400).send("You must specify a 'command' in the body !");
   }
   if (!python) {
-    initializePython();
+    initializePython(res);
     return res
       .status(503)
       .send(
@@ -144,14 +144,14 @@ app.post("/sendCommand", (req, res) => {
   python.stdin.uncork();
 });
 app.post("/initPython", (req, res) => {
-  initializePython();
+  initializePython(res);
 });
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-async function initializePython() {
+async function initializePython(res) {
   //await fkill("Chrome");
   //console.log("Killed Chrome");
   console.log("Initializing python.");
