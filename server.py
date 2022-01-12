@@ -1,5 +1,6 @@
 import undetected_chromedriver.v2 as uc
 from webdriver_manager.chrome import ChromeDriverManager
+from scraperFunction import scrapePage
 
 driver = None
 
@@ -35,6 +36,16 @@ def function2(driver):
     print(result)
 
 
+def scrapeFunc(driver):
+    # ... do something
+    result = scrapePage(
+        driver,
+        "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao",
+        38294699000112,
+    )
+    print(result)
+
+
 while True:
     choice = input("What would you like to do ? ")
     if choice == "1":
@@ -46,6 +57,9 @@ while True:
     elif choice == "3":
         print("Calling function 2.")
         function2(driver)
+    elif choice == "4":
+        print("Calling function scrapeFunc.")
+        scrapeFunc(driver)
     elif choice == "exit":
         print("Exiting")
         exit()
