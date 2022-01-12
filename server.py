@@ -7,11 +7,11 @@ driver = None
 
 def create_driver():
     options = uc.ChromeOptions()
-    # options.add_argument("--headless")
+    options.headless = True
+    options.add_argument("--headless")
     # options.add_argument("--disable-gpu")
     # options.add_argument("--no-sandbox")
     # options.add_argument("--disable-dev-shm-usage")
-    # driver = uc.Chrome(chrome_options=options, executable_path="/opt/chromedriver")
     driver = uc.Chrome(executable_path=ChromeDriverManager().install(), options=options)
     return driver
 
