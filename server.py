@@ -60,6 +60,10 @@ while True:
         print("Calling function 2.")
         function2(driver)
     elif choice == "4":
+        print("Creating driver.")
+        if type(driver) == type(None):
+            driver = create_driver()
+            print("Driver created")
         print("Calling function scrapeFunc.")
         scrapeFunc(driver)
         print("Close now.")

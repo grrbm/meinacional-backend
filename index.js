@@ -117,12 +117,12 @@ app.post("/sendCommand", (req, res) => {
     return res.status(400).send("You must specify a 'command' in the body !");
   }
   if (!python) {
-    initializePython(res);
-    return res
-      .status(503)
-      .send(
-        "driver instance not found ! re-initializing python. Wait several seconds and try again."
-      );
+    initializePython();
+    // return res
+    //   .status(503)
+    //   .send(
+    //     "driver instance not found ! re-initializing python. Wait several seconds and try again."
+    //   );
   }
   console.log("Sending command.");
   //attachListeners(req, res, python);
@@ -144,21 +144,21 @@ app.post("/sendCommand", (req, res) => {
   python.stdin.uncork();
 });
 app.post("/initPython", (req, res) => {
-  initializePython(res);
+  initializePython();
+  res.status(200).send("Initialize command sent.");
 });
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-async function initializePython(res) {
+async function initializePython() {
   //await fkill("Chrome");
   //console.log("Killed Chrome");
   console.log("Initializing python.");
   python = spawn("python", ["server.py"], { detached: true });
   python.unref();
   //python.stdout.pipe(process.stdout);
-  res.status(200).send("Initialize command sent.");
 }
 
 function attachListeners(req, res, python) {
