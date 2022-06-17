@@ -21,3 +21,14 @@ Obs: If you just want to see how the script works in your browser:
 Obs2: If you want to check payment code:
   Run: 
       py print.payment.py 38294699000112 Dezembro/2021           
+
+
+Obs3: For installing in a Ubuntu 20.04 server:
+
+install python3
+add python3 alias 'python' to ~/.bashrc
+       alias python=python3.9
+install all requirements like this: 
+       python3.9 -m pip install -r requirements.txt
+install chromium:
+       sudo apt install chromium-chromedriver
