@@ -37,48 +37,53 @@ puppeteer.use(StealthPlugin());
   await yearSelector.click();
   console.log("clicked year selector");
 
-  const exampleArray = await page.$$(
+  let exampleArray = await page.$$(
     `li[data-original-index]:not([class^='disabled']) > a > span.text`
   );
-
   exampleArray.reverse();
-  await exampleArray[0].click();
-
-  const submitYearBtn = await page.waitForSelector(`button[type='submit']`);
-  await submitYearBtn.click();
-
-  await page.waitForSelector(`table.table`);
-  console.log("found table");
-  const tableInnerHtml = await page.$eval(
-    "table.table",
-    (element) => element.innerHTML
-  );
-  //console.log("this is the table inner HTML: " + tableInnerHtml);
-
-  const rows = await page.evaluate(() => {
-    const months = Array.from(
-      document.querySelectorAll("tr.pa > td:nth-child(2)"),
-      (e) => e.innerHTML.trim()
+  exampleArray.pop();
+  const amountAvailableYears = exampleArray.length;
+  for (let i = 0; i < amountAvailableYears; i++) {
+    await page.waitForSelector(`button.btn.dropdown-toggle`);
+    exampleArray = await page.$$(
+      `li[data-original-index]:not([class^='disabled']) > a > span.text`
     );
-    const apurados = Array.from(
-      document.querySelectorAll("tr.pa > td:nth-child(3)"),
-      (e) => e.innerHTML.trim()
+    exampleArray.reverse();
+    exampleArray.pop();
+    //await exampleArray[i].click();
+    await page.evaluate((btn) => {
+      // this executes in the page
+      btn.click();
+    }, exampleArray[i]);
+
+    const submitYearBtn = await page.waitForSelector(`button[type='submit']`);
+    await submitYearBtn.click();
+
+    await page.waitForSelector(`table.table`);
+    console.log("found table");
+    const tableInnerHtml = await page.$eval(
+      "table.table",
+      (element) => element.innerHTML
     );
-    const situations = Array.from(
-      document.querySelectorAll("tr.pa > td:nth-child(5)"),
-      (e) => e.innerHTML.trim()
-    );
-    const parsedData = months.map((month, idx) => {
-      return { month, apurado: apurados[idx], situation: situations[idx] };
+
+    const rows = await page.evaluate(() => {
+      const months = Array.from(
+        document.querySelectorAll("tr.pa > td:nth-child(2)"),
+        (e) => e.innerHTML.trim()
+      );
+      const apurados = Array.from(
+        document.querySelectorAll("tr.pa > td:nth-child(3)"),
+        (e) => e.innerHTML.trim()
+      );
+      const situations = Array.from(
+        document.querySelectorAll("tr.pa > td:nth-child(5)"),
+        (e) => e.innerHTML.trim()
+      );
+      const parsedData = months.map((month, idx) => {
+        return { month, apurado: apurados[idx], situation: situations[idx] };
+      });
+      return parsedData;
     });
-    return parsedData;
-  });
-  //tr.pa > td:nth-child(2)
-  //tr.pa > td:nth-child(5)
-  console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
-
-  //const $ = cheerio.load(tableInnerHtml, null, false);
-
-  //console.log("THIS: " + $.html());
-  //await browser.close();
+    console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
+  }
 })();
