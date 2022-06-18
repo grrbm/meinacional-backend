@@ -56,18 +56,25 @@ puppeteer.use(StealthPlugin());
   //console.log("this is the table inner HTML: " + tableInnerHtml);
 
   const rows = await page.evaluate(() => {
-    const rows = document.querySelectorAll("tr.pa");
-
-    let array = [];
-    for (let i = 0; i < rows.length; i++) {
-      const row = Array.from(rows[i].querySelectorAll("td"), (e) =>
-        e.innerHTML.trim()
-      );
-      array.push(row);
-    }
-    return array;
+    const months = Array.from(
+      document.querySelectorAll("tr.pa > td:nth-child(2)"),
+      (e) => e.innerHTML.trim()
+    );
+    const apurados = Array.from(
+      document.querySelectorAll("tr.pa > td:nth-child(3)"),
+      (e) => e.innerHTML.trim()
+    );
+    const situations = Array.from(
+      document.querySelectorAll("tr.pa > td:nth-child(5)"),
+      (e) => e.innerHTML.trim()
+    );
+    const parsedData = months.map((month, idx) => {
+      return { month, apurado: apurados[idx], situation: situations[idx] };
+    });
+    return parsedData;
   });
-
+  //tr.pa > td:nth-child(2)
+  //tr.pa > td:nth-child(5)
   console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
 
   //const $ = cheerio.load(tableInnerHtml, null, false);
