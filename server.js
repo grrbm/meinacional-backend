@@ -4,7 +4,7 @@ const cheerio = require("cheerio");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 
-const TIMEOUT_SECONDS = 15;
+const TIMEOUT_SECONDS = 30;
 const getMeiHistory = async (cnpj) => {
   const startTime = Date.now();
   const timeoutPromise = new Promise((resolve, reject) => {
