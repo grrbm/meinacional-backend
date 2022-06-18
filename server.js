@@ -3,7 +3,8 @@ const cheerio = require("cheerio");
 
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
-(async () => {
+
+const getMeiHistory = async (cnpj) => {
   const browser = await puppeteer.launch({
     headless: false,
     userDataDir: "./puppeteerDataDir",
@@ -15,11 +16,10 @@ puppeteer.use(StealthPlugin());
 
   const cnpjInputSelector = `input[id='cnpj']`;
   const cnpjInput = await page.waitForSelector(cnpjInputSelector);
-  const myCnpj = "38294699000112";
-  await page.$eval(
-    cnpjInputSelector,
-    (elem) => (elem.value = "38294699000112")
-  );
+  await page.evaluate((cnpj) => {
+    const cnpjField = document.querySelector(`input[id='cnpj']`);
+    cnpjField.value = cnpj;
+  }, cnpj);
   //await cnpjInput.type(myCnpj);
 
   const submitBtnSelector = `button[id='continuar']`;
@@ -37,14 +37,20 @@ puppeteer.use(StealthPlugin());
   await yearSelector.click();
   console.log("clicked year selector");
 
+  //pop the first element because it is "blank" (unselected)
   let exampleArray = await page.$$(
     `li[data-original-index]:not([class^='disabled']) > a > span.text`
   );
   exampleArray.reverse();
   exampleArray.pop();
   const amountAvailableYears = exampleArray.length;
+  const allData = [];
   for (let i = 0; i < amountAvailableYears; i++) {
+    //wait for this selector because when it shows up the page is fully loaded
     await page.waitForSelector(`button.btn.dropdown-toggle`);
+
+    //Gotta get the puppeteer selector again because the page is auto-refreshed
+    //and it loses context.
     exampleArray = await page.$$(
       `li[data-original-index]:not([class^='disabled']) > a > span.text`
     );
@@ -84,6 +90,15 @@ puppeteer.use(StealthPlugin());
       });
       return parsedData;
     });
-    console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
+    //console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
+    allData.push(rows);
   }
-})();
+  return {
+    success: true,
+    data: allData,
+  };
+};
+
+module.exports = {
+  getMeiHistory,
+};
