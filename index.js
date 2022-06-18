@@ -60,10 +60,15 @@ app.post("/meiHistory", async (req, res) => {
   if (!req.body.cnpj) {
     return res.status(400).send("You need to supply CNPJ parameter");
   }
-  const meiHistory = await getMeiHistory(req.body.cnpj);
-  if (meiHistory.success) {
+
+  const { success, data, requestDurationSeconds, error } = await getMeiHistory(
+    req.body.cnpj
+  );
+  if (success) {
     console.log("Sucess getting mei history !");
-    res.status(200).send(meiHistory.data);
+    res.status(200).send({ data, requestDurationSeconds });
+  } else {
+    res.status(500).send({ error });
   }
 });
 
