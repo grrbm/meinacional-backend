@@ -20,6 +20,7 @@ const getMeiHistory = async (cnpj) => {
     const browser = await puppeteer.launch({
       headless: false,
       userDataDir: "./puppeteerDataDir",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
     await page.goto(
