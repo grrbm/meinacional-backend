@@ -18,7 +18,7 @@ const getMeiHistory = async (cnpj) => {
   });
   const meiHistoryPromise = new Promise(async (resolve, reject) => {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       userDataDir: "./puppeteerDataDir",
       args: ["--no-sandbox"],
     });
