@@ -1,15 +1,34 @@
 const puppeteer = require("puppeteer-extra");
 const cheerio = require("cheerio");
+const Xvfb = require("xvfb");
 
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-puppeteer.use(StealthPlugin());
 
 const TIMEOUT_SECONDS = 30;
 const getMeiHistory = async (cnpj) => {
+  puppeteer.use(StealthPlugin());
   const startTime = Date.now();
+  var xvfb = new Xvfb({
+    silent: true,
+    xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
+  });
+  xvfb.start((err) => {
+    if (err) console.error(err);
+  });
+  const browser = await puppeteer.launch({
+    headless: false,
+    userDataDir: "./puppeteerDataDir",
+    defaultViewport: null, //otherwise it defaults to 800x600
+    args: ["--no-sandbox", "--start-fullscreen", "--display=" + xvfb._display],
+  });
+  const page = await browser.newPage();
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
+    setTimeout(async () => {
       console.log("just timed out");
+      await page.screenshot({
+        path: "timeoutscreenshot.png",
+        fullPage: true,
+      });
       resolve({
         success: false,
         error: "timeout",
@@ -17,12 +36,6 @@ const getMeiHistory = async (cnpj) => {
     }, TIMEOUT_SECONDS * 1000);
   });
   const meiHistoryPromise = new Promise(async (resolve, reject) => {
-    const browser = await puppeteer.launch({
-      headless: false,
-      userDataDir: "./puppeteerDataDir",
-      args: ["--no-sandbox"],
-    });
-    const page = await browser.newPage();
     await page.goto(
       "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
     );
@@ -107,6 +120,7 @@ const getMeiHistory = async (cnpj) => {
       allData.push(rows);
     }
     await browser.close();
+    xvfb.stop();
     const duration = Math.round((Date.now() - startTime) / 1000);
     resolve({
       success: true,
