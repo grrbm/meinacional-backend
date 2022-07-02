@@ -7,7 +7,7 @@
     "start": "node index.js",
     "cluster": "NODE_ENV=production pm2 start index.js -i 0 --name meiserver",
     "clusterReload": "NODE_ENV=production pm2 reload meiserver",
-    "reloadAll": "git pull && yarn && clusterReload"
+    "reloadAll": "git pull && yarn && yarn clusterReload"
   },
   "keywords": [],
   "author": "",
