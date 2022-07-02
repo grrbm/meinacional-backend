@@ -110,13 +110,22 @@ const getMeiHistory = async (cnpj) => {
         );
 
         if (foundError) {
+          //Gotta get the puppeteer selector again because the page is auto-refreshed
+          //and it loses context.
+          exampleArray = await page.$$(
+            `li[data-original-index]:not([class^='disabled']) > a > span.text`
+          );
+          exampleArray.reverse();
+          exampleArray.pop();
           const toastMessage = await page.evaluate(
             (el) => el.innerText,
             tableOrError
           );
-          allData.push(
-            "Error fetching year " + exampleArray[i] + ". " + toastMessage
+          const year = await page.evaluate(
+            (el) => el.innerText,
+            exampleArray[i]
           );
+          allData.push("Error fetching year " + year + ". " + toastMessage);
           continue;
         }
 
