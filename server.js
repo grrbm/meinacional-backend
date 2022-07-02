@@ -98,7 +98,28 @@ const getMeiHistory = async (cnpj) => {
         );
         await submitYearBtn.click();
 
-        await page.waitForSelector(`table.table`);
+        const tableOrError = await page.waitForSelector(
+          [`table.table`, `div.toast-message`].join(",")
+        );
+
+        const foundError = await page.evaluate(
+          (tableOrError, toastClass) =>
+            tableOrError.classList.contains(toastClass),
+          tableOrError,
+          "toast-message"
+        );
+
+        if (foundError) {
+          const toastMessage = await page.evaluate(
+            (el) => el.innerText,
+            tableOrError
+          );
+          allData.push(
+            "Error fetching year " + exampleArray[i] + ". " + toastMessage
+          );
+          continue;
+        }
+
         console.log("found table");
         const tableInnerHtml = await page.$eval(
           "table.table",
