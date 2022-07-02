@@ -125,7 +125,12 @@ const getMeiHistory = async (cnpj) => {
             (el) => el.innerText,
             exampleArray[i]
           );
-          allData.push("Error fetching year " + year + ". " + toastMessage);
+          const error = "Error fetching year " + year + ". " + toastMessage;
+          const yearAndError = {
+            year,
+            error,
+          };
+          allData.push(yearAndError);
           continue;
         }
 
@@ -158,7 +163,22 @@ const getMeiHistory = async (cnpj) => {
           return parsedData;
         });
         //console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
-        allData.push(rows);
+
+        //Gotta get the puppeteer selector again because the page is auto-refreshed
+        //and it loses context.
+        exampleArray = await page.$$(
+          `li[data-original-index]:not([class^='disabled']) > a > span.text`
+        );
+        exampleArray.reverse();
+        exampleArray.pop();
+        const year = await page.evaluate((el) => el.innerText, exampleArray[i]);
+        //---------------
+
+        const yearAndRows = {
+          year,
+          rows,
+        };
+        allData.push(yearAndRows);
       }
       await browser.close();
       xvfb.stop();
