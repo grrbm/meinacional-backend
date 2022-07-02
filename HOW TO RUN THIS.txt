@@ -1,3 +1,18 @@
+************NEW VERSION
+
+
+just run 
+       node index.js
+
+
+
+
+
+--------------------------------------------
+************OLD VERSION
+
+
+
 #1) start or refresh redis on docker:
 docker run --name some-redis -p 6379:6379 -d redis
 docker restart some-redis
