@@ -21,7 +21,7 @@ const getMeiHistory = async (cnpj) => {
       headless: false,
       userDataDir: "./puppeteerDataDir",
       defaultViewport: null, //otherwise it defaults to 800x600
-      slowMo: 250,
+      //slowMo: 250,
       ignoreHTTPSErrors: true,
       args: [
         "--no-sandbox",
