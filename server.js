@@ -6,6 +6,7 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 
 const TIMEOUT_SECONDS = 30;
 const getMeiHistory = async (cnpj) => {
+  let browser;
   try {
     puppeteer.use(StealthPlugin());
     const startTime = Date.now();
@@ -16,7 +17,7 @@ const getMeiHistory = async (cnpj) => {
     xvfb.start((err) => {
       if (err) console.error(err);
     });
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: false,
       userDataDir: "./puppeteerDataDir",
       defaultViewport: null, //otherwise it defaults to 800x600
@@ -118,11 +119,11 @@ const getMeiHistory = async (cnpj) => {
           exampleArray.reverse();
           exampleArray.pop();
           const toastMessage = await page.evaluate(
-            (el) => el.innerText,
+            (el) => el?.innerText,
             tableOrError
           );
           const year = await page.evaluate(
-            (el) => el.innerText,
+            (el) => el?.innerText,
             exampleArray[i]
           );
           const error = "Error fetching year " + year + ". " + toastMessage;
@@ -171,7 +172,10 @@ const getMeiHistory = async (cnpj) => {
         );
         exampleArray.reverse();
         exampleArray.pop();
-        const year = await page.evaluate((el) => el.innerText, exampleArray[i]);
+        const year = await page.evaluate(
+          (el) => el?.innerText,
+          exampleArray[i]
+        );
         //---------------
 
         const yearAndRows = {
@@ -198,6 +202,10 @@ const getMeiHistory = async (cnpj) => {
       error: "Internal Server Error: " + err,
     };
     return result;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 };
 

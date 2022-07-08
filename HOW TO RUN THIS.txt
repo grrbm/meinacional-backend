@@ -1,8 +1,20 @@
 ************NEW VERSION
 
 
+RUN LOCALLY: 
+
 just run 
        node index.js
+
+
+DEPLOY TO DIGITALOCEAN:
+
+       ssh root@143.198.132.139
+       cd ~/meinacional-backend
+       git pull
+       yarn reloadAll
+
+
 
 
 
