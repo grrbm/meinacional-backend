@@ -14,6 +14,13 @@ DEPLOY TO DIGITALOCEAN:
        git pull
        yarn reloadAll
 
+HOW TO ADD NEW SSH KEY:
+open terminal inside digital ocean (NOT your pc terminal)
+vim ~/.ssh/authorized_keys
+paste your new public key at the beginning of file
+save & exit
+run `systemclt reload ssh``
+Done. log in via ssh from terminal in your computer.
 
 
 
