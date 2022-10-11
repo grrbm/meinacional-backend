@@ -15,13 +15,13 @@ const getMeiHistory = async (cnpj) => {
   try {
     puppeteer.use(StealthPlugin());
     const startTime = Date.now();
-    // var xvfb = new Xvfb({
-    //   silent: true,
-    //   xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
-    // });
-    // xvfb.start((err) => {
-    //   if (err) console.error(err);
-    // });
+    var xvfb = new Xvfb({
+      silent: true,
+      xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
+    });
+    xvfb.start((err) => {
+      if (err) console.error(err);
+    });
     browser = await puppeteer.launch({
       headless: false,
       userDataDir: "./puppeteerDataDir",
@@ -31,7 +31,7 @@ const getMeiHistory = async (cnpj) => {
       args: [
         "--no-sandbox",
         "--start-fullscreen",
-        //"--display=" + xvfb._display,
+        "--display=" + xvfb._display,
       ],
     });
     const page = await browser.newPage();
