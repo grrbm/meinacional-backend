@@ -363,6 +363,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
                 full
               );
               if (success) {
+                await page.waitForTimeout(5000);
                 await browser.close();
                 xvfb.stop();
                 const duration = Math.round((Date.now() - startTime) / 1000);
