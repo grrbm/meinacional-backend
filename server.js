@@ -4,6 +4,7 @@ const Xvfb = require("xvfb");
 const { Page } = require("puppeteer");
 
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const { textContent } = require("domutils");
 
 const TIMEOUT_SECONDS = 30;
 const getMeiHistory = async (cnpj) => {
@@ -304,6 +305,48 @@ const getPaymentCode = async (monthYear, cnpj) => {
           `button[type='submit']`
         );
         await submitYearBtn.click();
+
+        console.log("clicking checkbox: ");
+
+        /**
+          After this submit, puppeteer loses "page" object because page is refreshed
+          So get it again.
+         */
+        const [notthispage, refreshedPage] = await browser.pages();
+        const foundCheckbox = await refreshedPage.evaluate((monthYear) => {
+          const checkboxes = Array.from(
+            document.querySelectorAll("tr.pa > td:nth-child(1) > input")
+          );
+          const months = Array.from(
+            document.querySelectorAll("tr.pa > td:nth-child(2)")
+          );
+          const found = months.filter((month, index) => {
+            if (month.textContent === monthYear) {
+              checkboxes[index].click();
+              return true;
+            }
+            return false;
+          });
+          return found;
+        }, monthYear);
+        if (foundCheckbox.length > 0) {
+          console.log("found the checkbox !!");
+          //
+          const emitirButtonSelector = await refreshedPage.waitForSelector(
+            "#btnEmitirDas"
+          );
+          await emitirButtonSelector.click();
+          const printDASbutton = await refreshedPage.waitForXPath(
+            '//a[@href="' +
+              "/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/emissao/imprimir" +
+              '"]'
+          );
+
+          await printDASbutton.click();
+        } else {
+          console.log("did not find checkbox ...");
+        }
+        console.log("finished clicking checkbox");
       } else {
         console.log("Not found !!");
       }
