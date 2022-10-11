@@ -5,6 +5,8 @@ const { Page } = require("puppeteer");
 
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const { textContent } = require("domutils");
+const { PdfReader } = require("pdfreader");
+const path = require("path");
 
 const TIMEOUT_SECONDS = 30;
 const getMeiHistory = async (cnpj) => {
@@ -342,6 +344,24 @@ const getPaymentCode = async (monthYear, cnpj) => {
               '"]'
           );
 
+          /** This part waits for browser download response, and filters the file name from the response headers. */
+          refreshedPage.on("response", (response) => {
+            //check for "Content-Disposition"
+            console.log("entered here!!!");
+            const disposition = response.headers()["content-disposition"];
+
+            if (disposition && disposition.indexOf("attachment") !== -1) {
+              var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+              var matches = filenameRegex.exec(disposition);
+              if (matches != null && matches[1]) {
+                filename = matches[1].replace(/['"]/g, "");
+              }
+              console.log("file name: " + filename);
+              const DOWNLOADFILEPATH = "/Users/guilhermereis/Downloads";
+              const full = path.join(path.resolve(DOWNLOADFILEPATH, filename));
+              readPdfFile(full);
+            }
+          });
           await printDASbutton.click();
         } else {
           console.log("did not find checkbox ...");
@@ -489,7 +509,45 @@ const getPaymentCode = async (monthYear, cnpj) => {
   }
 };
 
+const readPdfFile = async (
+  filename = "/Users/guilhermereis/Downloads/DAS-PGMEI-38294699000112-AC2022.pdf"
+) => {
+  let finished = false;
+  let accum = "";
+  new PdfReader().parseFileItems(filename, (err, item) => {
+    if (err) console.error("error:", err);
+    else if (!item) onFinish(accum);
+    else if (item.text) {
+      accum += item.text + " ";
+    }
+  });
+  const onFinish = (fullstring) => {
+    console.log("FInished ! Full string: " + fullstring);
+
+    //console.log("full string before: " + fullstring);
+    const [not, res1] = fullstring.match(
+      new RegExp("Página:(.*)AUTENTICAÇÃO MECÂNICA")
+    );
+    console.log("res1: " + JSON.stringify(res1, null, 2));
+    //console.log("full string after: " + fullstring);
+    const [not2, res2] = fullstring.match(
+      new RegExp("Valor Total do Documento(.*)CNPJ Razão Social")
+    );
+    console.log("res2: " + JSON.stringify(res2, null, 2));
+
+    const [not3, res3] = fullstring.match(
+      new RegExp("Razão Social(.*)Código Principal")
+    );
+    console.log("res3: " + JSON.stringify(res3, null, 2));
+
+    const [not4, res4] = fullstring.match(
+      new RegExp("Pagar este documento até(.*)Observações CPF")
+    );
+    console.log("res4: " + JSON.stringify(res4, null, 2));
+  };
+};
 module.exports = {
   getMeiHistory,
   getPaymentCode,
+  readPdfFile,
 };

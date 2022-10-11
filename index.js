@@ -1,4 +1,4 @@
-const { getMeiHistory, getPaymentCode } = require("./server.js");
+const { getMeiHistory, getPaymentCode, readPdfFile } = require("./server.js");
 require("dotenv").config();
 require("./database/mongoose/index");
 const express = require("express");
@@ -166,3 +166,13 @@ function attachListeners(req, res, python) {
   //   res.send(dataToSend);
   // });
 }
+
+app.post("/readPdfFile", async (req, res) => {
+  if (!req.body.cnpj) {
+    return res
+      .status(400)
+      .send("You need to supply monthYear and cnpj parameters!");
+  }
+  res.send(200);
+  await readPdfFile();
+});
