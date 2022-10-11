@@ -34,6 +34,7 @@ const getMeiHistory = async (cnpj) => {
       ],
     });
     const page = await browser.newPage();
+
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(async () => {
         console.log("just timed out");
@@ -236,7 +237,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
       headless: false,
       userDataDir: "./puppeteerDataDir",
       defaultViewport: null, //otherwise it defaults to 800x600
-      slowMo: 250,
+      //slowMo: 250,
       ignoreHTTPSErrors: true,
       args: [
         "--no-sandbox",
@@ -245,8 +246,10 @@ const getPaymentCode = async (monthYear, cnpj) => {
       ],
     });
     const page = await browser.newPage();
+
+    let timer = null;
     const timeoutPromise = new Promise((resolve, reject) => {
-      setTimeout(async () => {
+      timer = setTimeout(async () => {
         console.log("just timed out");
         await page.screenshot({
           path: "timeoutscreenshot.png",
@@ -258,7 +261,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
         });
       }, TIMEOUT_SECONDS * 1000);
     });
-    const meiHistoryPromise = new Promise(async (resolve, reject) => {
+    const paymentCodePromise = new Promise(async (resolve, reject) => {
       await page.goto(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
       );
@@ -310,6 +313,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
 
         console.log("clicking checkbox: ");
 
+        await page.waitForNavigation({ waitUntil: "networkidle2" });
         /**
           After this submit, puppeteer loses "page" object because page is refreshed
           So get it again.
@@ -337,6 +341,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
           const emitirButtonSelector = await refreshedPage.waitForSelector(
             "#btnEmitirDas"
           );
+
           await emitirButtonSelector.click();
           const printDASbutton = await refreshedPage.waitForXPath(
             '//a[@href="' +
@@ -363,10 +368,18 @@ const getPaymentCode = async (monthYear, cnpj) => {
                 full
               );
               if (success) {
-                await page.waitForTimeout(5000);
-                await browser.close();
+                console.log("pdf file was read !");
+                //await refreshedPage.waitForTimeout(5000);
+
+                //await browser.close();
+                await browser.process().kill("SIGINT");
+                console.log("passed the browser close");
+                //await browser.process().kill("SIGINT");
+                //await page.waitForTimeout(1000)
+
                 xvfb.stop();
                 const duration = Math.round((Date.now() - startTime) / 1000);
+                clearTimeout(timer);
                 resolve({
                   success: true,
                   data: { res1, res2, res3, res4 },
@@ -376,6 +389,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
                 await browser.close();
                 xvfb.stop();
                 const duration = Math.round((Date.now() - startTime) / 1000);
+                clearTimeout(timer);
                 resolve({
                   success: false,
                   requestDurationSeconds: duration,
@@ -383,7 +397,30 @@ const getPaymentCode = async (monthYear, cnpj) => {
               }
             }
           });
+          //await refreshedPage.waitForNavigation({ waitUntil: "networkidle2" });
+          refreshedPage.on("console", async (msg) => {
+            const msgArgs = msg.args();
+            for (let i = 0; i < msgArgs.length; ++i) {
+              const newMsgText = await msgArgs[i].jsonValue();
+              if (typeof newMsgText === "string") {
+                if (newMsgText.includes("[debug]")) {
+                  console.log(await msgArgs[i].jsonValue());
+                }
+              }
+            }
+          });
+          const dialogDismissed = new Promise((resolve, reject) => {
+            //
+            const handler = async (dialog) => {
+              await dialog.dismiss();
+              resolve(dialog.message());
+            };
+            page.once("dialog", handler);
+          });
+
           await printDASbutton.click();
+          const msg = await dialogDismissed;
+          console.log(msg);
         } else {
           console.log("did not find checkbox ...");
         }
@@ -394,7 +431,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
 
       //await page.waitForTimeout(100000000);
     });
-    const result = await Promise.race([timeoutPromise, meiHistoryPromise]);
+    const result = await Promise.race([timeoutPromise, paymentCodePromise]);
     console.log("race finished");
     return result;
   } catch (err) {
@@ -461,3 +498,5 @@ module.exports = {
   getPaymentCode,
   readPdfFile,
 };
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

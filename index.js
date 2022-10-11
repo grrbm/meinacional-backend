@@ -84,7 +84,7 @@ app.post("/paymentCode", async (req, res) => {
     req.body.cnpj
   );
   if (success) {
-    console.log("Sucess getting mei history !");
+    console.log("Sucess getting payment code !");
     res.status(200).send({ data, requestDurationSeconds });
   } else {
     res.status(500).send({ error });
