@@ -345,7 +345,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
           );
 
           /** This part waits for browser download response, and filters the file name from the response headers. */
-          refreshedPage.on("response", (response) => {
+          refreshedPage.on("response", async (response) => {
             //check for "Content-Disposition"
             console.log("entered here!!!");
             const disposition = response.headers()["content-disposition"];
@@ -359,7 +359,27 @@ const getPaymentCode = async (monthYear, cnpj) => {
               console.log("file name: " + filename);
               const DOWNLOADFILEPATH = "/Users/guilhermereis/Downloads";
               const full = path.join(path.resolve(DOWNLOADFILEPATH, filename));
-              readPdfFile(full);
+              const { success, res1, res2, res3, res4 } = await readPdfFile(
+                full
+              );
+              if (success) {
+                await browser.close();
+                xvfb.stop();
+                const duration = Math.round((Date.now() - startTime) / 1000);
+                resolve({
+                  success: true,
+                  data: { res1, res2, res3, res4 },
+                  requestDurationSeconds: duration,
+                });
+              } else {
+                await browser.close();
+                xvfb.stop();
+                const duration = Math.round((Date.now() - startTime) / 1000);
+                resolve({
+                  success: false,
+                  requestDurationSeconds: duration,
+                });
+              }
             }
           });
           await printDASbutton.click();
@@ -371,127 +391,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
         console.log("Not found !!");
       }
 
-      await page.waitForTimeout(100000000);
-
-      const amountAvailableYears = exampleArray.length;
-      const allData = [];
-      for (let i = 0; i < amountAvailableYears; i++) {
-        //wait for this selector because when it shows up the page is fully loaded
-        await page.waitForSelector(`button.btn.dropdown-toggle`);
-
-        //Gotta get the puppeteer selector again because the page is auto-refreshed
-        //and it loses context.
-        exampleArray = await page.$$(
-          `li[data-original-index]:not([class^='disabled']) > a > span.text`
-        );
-        exampleArray.reverse();
-        exampleArray.pop();
-
-        //await exampleArray[i].click();
-        await page.evaluate((btn) => {
-          // this executes in the page
-          btn.click();
-        }, exampleArray[i]);
-
-        const submitYearBtn = await page.waitForSelector(
-          `button[type='submit']`
-        );
-        await submitYearBtn.click();
-
-        const tableOrError = await page.waitForSelector(
-          [`table.table`, `div.toast-message`].join(",")
-        );
-
-        const foundError = await page.evaluate(
-          (tableOrError, toastClass) =>
-            tableOrError.classList.contains(toastClass),
-          tableOrError,
-          "toast-message"
-        );
-
-        if (foundError) {
-          //Gotta get the puppeteer selector again because the page is auto-refreshed
-          //and it loses context.
-          exampleArray = await page.$$(
-            `li[data-original-index]:not([class^='disabled']) > a > span.text`
-          );
-          exampleArray.reverse();
-          exampleArray.pop();
-          const toastMessage = await page.evaluate(
-            (el) => el?.innerText,
-            tableOrError
-          );
-          const year = await page.evaluate(
-            (el) => el?.innerText,
-            exampleArray[i]
-          );
-          const error = "Error fetching year " + year + ". " + toastMessage;
-          const yearAndError = {
-            year,
-            error,
-          };
-          allData.push(yearAndError);
-          continue;
-        }
-
-        console.log("found table");
-        const tableInnerHtml = await page.$eval(
-          "table.table",
-          (element) => element.innerHTML
-        );
-
-        const rows = await page.evaluate(() => {
-          const months = Array.from(
-            document.querySelectorAll("tr.pa > td:nth-child(2)"),
-            (e) => e.innerHTML.trim()
-          );
-          const apurados = Array.from(
-            document.querySelectorAll("tr.pa > td:nth-child(3)"),
-            (e) => e.innerHTML.trim()
-          );
-          const situations = Array.from(
-            document.querySelectorAll("tr.pa > td:nth-child(5)"),
-            (e) => e.innerHTML.trim()
-          );
-          const parsedData = months.map((month, idx) => {
-            return {
-              month,
-              apurado: apurados[idx],
-              situation: situations[idx],
-            };
-          });
-          return parsedData;
-        });
-        //console.log("this is the rows object: " + JSON.stringify(rows, null, 2));
-
-        //Gotta get the puppeteer selector again because the page is auto-refreshed
-        //and it loses context.
-        exampleArray = await page.$$(
-          `li[data-original-index]:not([class^='disabled']) > a > span.text`
-        );
-        exampleArray.reverse();
-        exampleArray.pop();
-        const year = await page.evaluate(
-          (el) => el?.innerText,
-          exampleArray[i]
-        );
-        //---------------
-
-        const yearAndRows = {
-          year,
-          rows,
-        };
-        allData.push(yearAndRows);
-      }
-
-      await browser.close();
-      xvfb.stop();
-      const duration = Math.round((Date.now() - startTime) / 1000);
-      resolve({
-        success: true,
-        data: allData,
-        requestDurationSeconds: duration,
-      });
+      //await page.waitForTimeout(100000000);
     });
     const result = await Promise.race([timeoutPromise, meiHistoryPromise]);
     console.log("race finished");
@@ -512,39 +412,48 @@ const getPaymentCode = async (monthYear, cnpj) => {
 const readPdfFile = async (
   filename = "/Users/guilhermereis/Downloads/DAS-PGMEI-38294699000112-AC2022.pdf"
 ) => {
-  let finished = false;
-  let accum = "";
-  new PdfReader().parseFileItems(filename, (err, item) => {
-    if (err) console.error("error:", err);
-    else if (!item) onFinish(accum);
-    else if (item.text) {
-      accum += item.text + " ";
+  return new Promise((resolve, reject) => {
+    //
+    try {
+      let finished = false;
+      let accum = "";
+      new PdfReader().parseFileItems(filename, (err, item) => {
+        if (err) console.error("error:", err);
+        else if (!item) onFinish(accum);
+        else if (item.text) {
+          accum += item.text + " ";
+        }
+      });
+      const onFinish = (fullstring) => {
+        console.log("FInished ! Full string: " + fullstring);
+
+        //console.log("full string before: " + fullstring);
+        const [not, res1] = fullstring.match(
+          new RegExp("Página:(.*)AUTENTICAÇÃO MECÂNICA")
+        );
+        console.log("res1: " + JSON.stringify(res1, null, 2));
+        //console.log("full string after: " + fullstring);
+        const [not2, res2] = fullstring.match(
+          new RegExp("Valor Total do Documento(.*)CNPJ Razão Social")
+        );
+        console.log("res2: " + JSON.stringify(res2, null, 2));
+
+        const [not3, res3] = fullstring.match(
+          new RegExp("Razão Social(.*)Código Principal")
+        );
+        console.log("res3: " + JSON.stringify(res3, null, 2));
+
+        const [not4, res4] = fullstring.match(
+          new RegExp("Pagar este documento até(.*)Observações CPF")
+        );
+        console.log("res4: " + JSON.stringify(res4, null, 2));
+        resolve({ success: true, res1, res2, res3, res4 });
+      };
+    } catch (err) {
+      console.log("Error reading pdf file !" + err);
+      resolve({ success: false });
     }
   });
-  const onFinish = (fullstring) => {
-    console.log("FInished ! Full string: " + fullstring);
-
-    //console.log("full string before: " + fullstring);
-    const [not, res1] = fullstring.match(
-      new RegExp("Página:(.*)AUTENTICAÇÃO MECÂNICA")
-    );
-    console.log("res1: " + JSON.stringify(res1, null, 2));
-    //console.log("full string after: " + fullstring);
-    const [not2, res2] = fullstring.match(
-      new RegExp("Valor Total do Documento(.*)CNPJ Razão Social")
-    );
-    console.log("res2: " + JSON.stringify(res2, null, 2));
-
-    const [not3, res3] = fullstring.match(
-      new RegExp("Razão Social(.*)Código Principal")
-    );
-    console.log("res3: " + JSON.stringify(res3, null, 2));
-
-    const [not4, res4] = fullstring.match(
-      new RegExp("Pagar este documento até(.*)Observações CPF")
-    );
-    console.log("res4: " + JSON.stringify(res4, null, 2));
-  };
 };
 module.exports = {
   getMeiHistory,

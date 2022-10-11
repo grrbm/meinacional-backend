@@ -173,6 +173,16 @@ app.post("/readPdfFile", async (req, res) => {
       .status(400)
       .send("You need to supply monthYear and cnpj parameters!");
   }
-  res.send(200);
-  await readPdfFile();
+  const { success, res1, res2, res3, res4 } = await readPdfFile();
+  if (success) {
+    res.status(200).send({
+      success,
+      res1,
+      res2,
+      res3,
+      res4,
+    });
+  } else {
+    res.status(500).send("Theres Some Error !");
+  }
 });
