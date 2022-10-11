@@ -1,4 +1,4 @@
-const { getMeiHistory } = require("./server.js");
+const { getMeiHistory, getPaymentCode } = require("./server.js");
 require("dotenv").config();
 require("./database/mongoose/index");
 const express = require("express");
@@ -72,32 +72,23 @@ app.post("/meiHistory", async (req, res) => {
   }
 });
 
-app.post("/paymentCode", (req, res) => {
-  // if (!req.body.monthYear) {
-  //   return res.status(400).send("You need to supply monthYear parameter");
-  // }
-  // console.log("got paymentCode request");
-  // const job = queue
-  //   .create("mytype", {
-  //     letter: "a",
-  //     title: "mytitle",
-  //     cnpj: req.body.cnpj,
-  //     monthYear: req.body.monthYear,
-  //   })
-  //   .removeOnComplete(true)
-  //   .save((error) => {
-  //     if (error) {
-  //       next(error);
-  //       return;
-  //     }
-  //     job.on("complete", (result) => {
-  //       res.send(`Hello Intense ${result}`);
-  //     });
-  //     job.on("failed", () => {
-  //       const failedError = new Error("failed");
-  //       next(failedError);
-  //     });
-  //   });
+app.post("/paymentCode", async (req, res) => {
+  if (!req.body.monthYear || !req.body.cnpj) {
+    return res
+      .status(400)
+      .send("You need to supply monthYear and cnpj parameters!");
+  }
+  console.log("got paymentCode request");
+  const { success, data, requestDurationSeconds, error } = await getPaymentCode(
+    req.body.monthYear,
+    req.body.cnpj
+  );
+  if (success) {
+    console.log("Sucess getting mei history !");
+    res.status(200).send({ data, requestDurationSeconds });
+  } else {
+    res.status(500).send({ error });
+  }
 });
 
 let python;
