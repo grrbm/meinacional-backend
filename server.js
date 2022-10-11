@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer-extra");
 const cheerio = require("cheerio");
 const Xvfb = require("xvfb");
 const { Page } = require("puppeteer");
+var shell = require("shelljs");
 
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const { textContent } = require("domutils");
@@ -354,6 +355,9 @@ const getPaymentCode = async (monthYear, cnpj) => {
             //check for "Content-Disposition"
             console.log("entered here!!!");
             const disposition = response.headers()["content-disposition"];
+            console.log(
+              "this is the headers: " + JSON.stringify(response.headers())
+            );
 
             if (disposition && disposition.indexOf("attachment") !== -1) {
               var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -369,10 +373,10 @@ const getPaymentCode = async (monthYear, cnpj) => {
               );
               if (success) {
                 console.log("pdf file was read !");
-                //await refreshedPage.waitForTimeout(5000);
 
-                //await browser.close();
-                await browser.process().kill("SIGINT");
+                await page.waitForTimeout(2000);
+                await browser.close();
+                shell.exec("pkill chromium");
                 console.log("passed the browser close");
                 //await browser.process().kill("SIGINT");
                 //await page.waitForTimeout(1000)
@@ -409,18 +413,8 @@ const getPaymentCode = async (monthYear, cnpj) => {
               }
             }
           });
-          const dialogDismissed = new Promise((resolve, reject) => {
-            //
-            const handler = async (dialog) => {
-              await dialog.dismiss();
-              resolve(dialog.message());
-            };
-            page.once("dialog", handler);
-          });
 
           await printDASbutton.click();
-          const msg = await dialogDismissed;
-          console.log(msg);
         } else {
           console.log("did not find checkbox ...");
         }
