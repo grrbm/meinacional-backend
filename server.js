@@ -366,8 +366,9 @@ const getPaymentCode = async (monthYear, cnpj) => {
                 filename = matches[1].replace(/['"]/g, "");
               }
               console.log("file name: " + filename);
-              const DOWNLOADFILEPATH = "/Users/guilhermereis/Downloads";
-              const full = path.join(path.resolve(DOWNLOADFILEPATH, filename));
+              const downloadPath = process.env.CHROMIUM_DOWNLOADS_FOLDER_PATH;
+              const full = path.join(path.resolve(downloadPath, filename));
+              console.log("full file path: " + full);
               const { success, res1, res2, res3, res4 } = await readPdfFile(
                 full
               );
