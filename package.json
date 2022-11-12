@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "cluster": "NODE_ENV=production pm2 start index.js -i 0 --name meiserver",
+    "cluster": "NODE_ENV=production pm2 start index.js -i 4 --name meiserver",
     "clusterReload": "NODE_ENV=production pm2 reload meiserver",
     "reloadAll": "git pull && yarn && yarn clusterReload"
   },

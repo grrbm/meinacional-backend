@@ -56,9 +56,17 @@ app.get("/", (req, res) => {
   });
 });
 
+let lock = false;
 app.post("/meiHistory", async (req, res) => {
+  if (lock) {
+    res.status(423).send("server busy\n\n");
+    return;
+  }
+  lock = true;
   if (!req.body.cnpj) {
-    return res.status(400).send("You need to supply CNPJ parameter");
+    res.status(400).send("You need to supply CNPJ parameter");
+    lock = false;
+    return;
   }
 
   const { success, data, requestDurationSeconds, error } = await getMeiHistory(
@@ -70,6 +78,7 @@ app.post("/meiHistory", async (req, res) => {
   } else {
     res.status(500).send({ error });
   }
+  lock = false;
 });
 
 app.post("/paymentCode", async (req, res) => {
