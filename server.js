@@ -187,7 +187,7 @@ const getMeiHistory = async (cnpj) => {
         };
         allData.push(yearAndRows);
       }
-      await page.waitForTimeout(10000);
+      //await page.waitForTimeout(10000);
       await browser.close();
       const duration = Math.round((Date.now() - startTime) / 1000);
       resolve({
