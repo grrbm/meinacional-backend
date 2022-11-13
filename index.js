@@ -183,19 +183,28 @@ app.post("/readPdfFile", async (req, res) => {
 (async () => {
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_CONTEXT,
-    maxConcurrency: 1,
+    maxConcurrency: process.env.MAX_CONCURRENCY || 1,
   });
 
   // define your task (in this example we extract the title of the given page)
   await cluster.task(async ({ page, data: cnpj }) => {
-    const { success, data, requestDurationSeconds, error } =
-      await getMeiHistory(cnpj);
-    return {
-      success,
-      data,
-      requestDurationSeconds,
-      error,
-    };
+    try {
+      const { success, data, requestDurationSeconds, error } =
+        await getMeiHistory(cnpj);
+      return {
+        success,
+        data,
+        requestDurationSeconds,
+        error,
+      };
+    } catch (err) {
+      //
+      console.log("Some hard to debug error !");
+      return {
+        success: false,
+        error: "Some hard to debug error !",
+      };
+    }
   });
   // Listen for the request
   app.post("/meiHistory", async function (req, res) {
