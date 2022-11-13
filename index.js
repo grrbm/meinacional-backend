@@ -1,10 +1,11 @@
 const { getMeiHistory, getPaymentCode, readPdfFile } = require("./server.js");
 require("dotenv").config();
+console.log(process.env);
 require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
-const maxConc = 2;
+const maxConc = process.env.MAX_CONCURRENCY || 1;
 const { spawn } = require("child_process");
 const { Cluster } = require("puppeteer-cluster");
 
