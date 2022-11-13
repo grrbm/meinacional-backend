@@ -4,7 +4,7 @@ require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
-const maxConc = process.env.MAX_CONCURRENCY || 1;
+const maxConc = 2;
 const { spawn } = require("child_process");
 const { Cluster } = require("puppeteer-cluster");
 
