@@ -4,7 +4,7 @@ require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
-const concurrency = process.env.MAX_CONCURRENCY || 1;
+const maxConc = process.env.MAX_CONCURRENCY || 1;
 const { spawn } = require("child_process");
 const { Cluster } = require("puppeteer-cluster");
 
@@ -184,7 +184,7 @@ app.post("/readPdfFile", async (req, res) => {
 (async () => {
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_CONTEXT,
-    maxConcurrency: concurrency,
+    maxConcurrency: maxConc,
   });
 
   // define your task (in this example we extract the title of the given page)
@@ -217,7 +217,7 @@ app.post("/readPdfFile", async (req, res) => {
 
   app.listen(port, () => {
     console.log(
-      `Example app listening at http://localhost:${port}. Max concurrency: ${concurrency}`
+      `Example app listening at http://localhost:${port}. Max concurrency: ${maxConc}`
     );
   });
 })();
