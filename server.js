@@ -23,7 +23,7 @@ const getMeiHistory = async (cnpj) => {
     //   if (err) console.error(err);
     // });
     browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       userDataDir: "./puppeteerDataDir",
       defaultViewport: null, //otherwise it defaults to 800x600
       //slowMo: 250,
