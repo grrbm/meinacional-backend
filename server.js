@@ -15,13 +15,13 @@ const getMeiHistory = async (cnpj) => {
   try {
     puppeteer.use(StealthPlugin());
     const startTime = Date.now();
-    var xvfb = new Xvfb({
-      silent: true,
-      xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
-    });
-    xvfb.start((err) => {
-      if (err) console.error(err);
-    });
+    // var xvfb = new Xvfb({
+    //   silent: true,
+    //   xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
+    // });
+    // xvfb.start((err) => {
+    //   if (err) console.error(err);
+    // });
     browser = await puppeteer.launch({
       headless: false,
       userDataDir: "./puppeteerDataDir",
@@ -30,8 +30,8 @@ const getMeiHistory = async (cnpj) => {
       ignoreHTTPSErrors: true,
       args: [
         "--no-sandbox",
-        "--start-fullscreen",
-        "--display=" + xvfb._display,
+        //"--start-fullscreen",
+        //"--display=" + xvfb._display,
       ],
     });
     const page = await browser.newPage();
@@ -39,10 +39,19 @@ const getMeiHistory = async (cnpj) => {
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(async () => {
         console.log("just timed out");
-        await page.screenshot({
-          path: "timeoutscreenshot.png",
-          fullPage: true,
-        });
+        if (browser && page) {
+          try {
+            await page.screenshot({
+              path: "timeoutscreenshot.png",
+              fullPage: true,
+            });
+          } catch (e) {
+            console.log(
+              "Could NOT take screenshot. Most likely browser has already been closed."
+            );
+          }
+        }
+
         resolve({
           success: false,
           error: "timeout",
@@ -194,7 +203,7 @@ const getMeiHistory = async (cnpj) => {
       }
       await page.waitForTimeout(10000);
       await browser.close();
-      xvfb.stop();
+      //xvfb.stop();
       const duration = Math.round((Date.now() - startTime) / 1000);
       resolve({
         success: true,
@@ -227,13 +236,13 @@ const getPaymentCode = async (monthYear, cnpj) => {
   try {
     puppeteer.use(StealthPlugin());
     const startTime = Date.now();
-    var xvfb = new Xvfb({
-      silent: true,
-      xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
-    });
-    xvfb.start((err) => {
-      if (err) console.error(err);
-    });
+    // var xvfb = new Xvfb({
+    //   silent: true,
+    //   xvfb_args: ["-screen", "0", "1280x720x24", "-ac"],
+    // });
+    // xvfb.start((err) => {
+    //   if (err) console.error(err);
+    // });
     browser = await puppeteer.launch({
       headless: false,
       userDataDir: "./puppeteerDataDir",
@@ -242,8 +251,8 @@ const getPaymentCode = async (monthYear, cnpj) => {
       ignoreHTTPSErrors: true,
       args: [
         "--no-sandbox",
-        "--start-fullscreen",
-        "--display=" + xvfb._display,
+        //"--start-fullscreen",
+        //"--display=" + xvfb._display,
       ],
     });
     const page = await browser.newPage();
@@ -382,7 +391,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
                 //await browser.process().kill("SIGINT");
                 //await page.waitForTimeout(1000)
 
-                xvfb.stop();
+                //xvfb.stop();
                 const duration = Math.round((Date.now() - startTime) / 1000);
                 clearTimeout(timer);
                 resolve({
@@ -392,7 +401,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
                 });
               } else {
                 await browser.close();
-                xvfb.stop();
+                //xvfb.stop();
                 const duration = Math.round((Date.now() - startTime) / 1000);
                 clearTimeout(timer);
                 resolve({
