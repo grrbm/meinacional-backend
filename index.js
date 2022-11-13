@@ -183,7 +183,7 @@ app.post("/readPdfFile", async (req, res) => {
 (async () => {
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_CONTEXT,
-    maxConcurrency: 2,
+    maxConcurrency: 1,
   });
 
   // define your task (in this example we extract the title of the given page)

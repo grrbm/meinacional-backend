@@ -12,6 +12,9 @@ node index.js
        git pull
        yarn reloadAll
 
+       su - deploy
+       (password)
+
 ## REBOOT THE SERVER
 
        "sudo reboot" (in ssh terminal)
