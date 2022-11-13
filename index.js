@@ -211,8 +211,14 @@ app.post("/readPdfFile", async (req, res) => {
   app.post("/meiHistory", async function (req, res) {
     // cluster.execute will run the job with the workers in the pool. As there is only one worker
     // in the pool, the jobs will be run sequentially
-    const result = await cluster.execute(req.body.cnpj);
-    res.status(200).send(result);
+    try {
+      //
+      const result = await cluster.execute(req.body.cnpj);
+      res.status(200).send(result);
+    } catch (err) {
+      //
+      res.status(500).send("weird error !");
+    }
   });
 
   app.listen(port, () => {
