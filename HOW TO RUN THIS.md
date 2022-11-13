@@ -12,6 +12,10 @@ node index.js
        git pull
        yarn reloadAll
 
+## REBOOT THE SERVER
+
+       "sudo reboot" (in ssh terminal)
+
 ## HOW TO ADD NEW SSH KEY:
 
 open terminal inside digital ocean (NOT your pc terminal)

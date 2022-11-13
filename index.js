@@ -5,8 +5,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const { spawn } = require("child_process");
-const kue = require("kue");
-const { Queue } = require("kue");
+const { Cluster } = require("puppeteer-cluster");
 
 // let REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 // const queue = kue.createQueue({
@@ -56,30 +55,19 @@ app.get("/", (req, res) => {
   });
 });
 
-let lock = false;
-app.post("/meiHistory", async (req, res) => {
-  if (lock) {
-    res.status(423).send("server busy\n\n");
-    return;
-  }
-  lock = true;
-  if (!req.body.cnpj) {
-    res.status(400).send("You need to supply CNPJ parameter");
-    lock = false;
-    return;
-  }
+// app.post("/meiHistory", async (req, res) => {
+//   if (!req.body.cnpj) {
+//     res.status(400).send("You need to supply CNPJ parameter");
+//     return;
+//   }
 
-  const { success, data, requestDurationSeconds, error } = await getMeiHistory(
-    req.body.cnpj
-  );
-  if (success) {
-    console.log("Sucess getting mei history !");
-    res.status(200).send({ data, requestDurationSeconds });
-  } else {
-    res.status(500).send({ error });
-  }
-  lock = false;
-});
+//   if (success) {
+//     console.log("Sucess getting mei history !");
+//     res.status(200).send({ data, requestDurationSeconds });
+//   } else {
+//     res.status(500).send({ error });
+//   }
+// });
 
 app.post("/paymentCode", async (req, res) => {
   if (!req.body.monthYear || !req.body.cnpj) {
@@ -137,10 +125,6 @@ app.post("/initPython", (req, res) => {
   res.status(200).send("Initialize command sent.");
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
-
 async function initializePython() {
   //await fkill("Chrome");
   //console.log("Killed Chrome");
@@ -195,3 +179,33 @@ app.post("/readPdfFile", async (req, res) => {
     res.status(500).send("Theres Some Error !");
   }
 });
+
+(async () => {
+  const cluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 1,
+  });
+
+  // define your task (in this example we extract the title of the given page)
+  await cluster.task(async ({ page, data: cnpj }) => {
+    const { success, data, requestDurationSeconds, error } =
+      await getMeiHistory(cnpj);
+    return {
+      success,
+      data,
+      requestDurationSeconds,
+      error,
+    };
+  });
+  // Listen for the request
+  app.post("/meiHistory", async function (req, res) {
+    // cluster.execute will run the job with the workers in the pool. As there is only one worker
+    // in the pool, the jobs will be run sequentially
+    const result = await cluster.execute(req.body.cnpj);
+    res.status(200).send(result);
+  });
+
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+  });
+})();
