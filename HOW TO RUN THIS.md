@@ -8,12 +8,13 @@ node index.js
 ## DEPLOY TO DIGITALOCEAN:
 
        ssh root@143.198.132.139
+       su - deploy
+       (input password)
        cd ~/meinacional-backend
        git pull
        yarn reloadAll
 
-       su - deploy
-       (password)
+
 
 ## REBOOT THE SERVER
 
