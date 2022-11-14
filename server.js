@@ -154,7 +154,9 @@ const getMeiHistory = async (cnpj) => {
             (e) => e.innerHTML.trim()
           );
           const situations = Array.from(
-            document.querySelectorAll("tr.pa > td:not(.multa):nth-child(5)"),
+            document.querySelectorAll(
+              "tr.pa > td:not(.vencimento):nth-child(5)"
+            ),
             (e) => e.innerHTML.trim()
           );
           const parsedData = months.map((month, idx) => {
