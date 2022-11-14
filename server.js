@@ -146,15 +146,15 @@ const getMeiHistory = async (cnpj) => {
 
         const rows = await page.evaluate(() => {
           const months = Array.from(
-            document.querySelectorAll("tr.pa > td:nth-child(2)"),
+            document.querySelectorAll("tr.pa > td:not(.multa):nth-child(2)"),
             (e) => e.innerHTML.trim()
           );
           const apurados = Array.from(
-            document.querySelectorAll("tr.pa > td:nth-child(3)"),
+            document.querySelectorAll("tr.pa > td:not(.multa):nth-child(3)"),
             (e) => e.innerHTML.trim()
           );
           const situations = Array.from(
-            document.querySelectorAll("tr.pa > td:nth-child(5)"),
+            document.querySelectorAll("tr.pa > td:not(.multa):nth-child(5)"),
             (e) => e.innerHTML.trim()
           );
           const parsedData = months.map((month, idx) => {
