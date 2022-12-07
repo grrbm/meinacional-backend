@@ -7,7 +7,13 @@ const port = process.env.PORT || 5000;
 const maxConc = process.env.MAX_CONCURRENCY || 1;
 const { spawn } = require("child_process");
 const { Cluster } = require("puppeteer-cluster");
+const { syncModels } = require("./db");
 
+// --------------------------------------------------------------------
+// SYNC DATABASE
+// --------------------------------------------------------------------
+
+syncModels();
 // --------------------------------------------------------------------
 // PARSE JSON
 // --------------------------------------------------------------------
