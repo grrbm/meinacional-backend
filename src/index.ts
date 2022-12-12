@@ -1,6 +1,5 @@
 import { getMeiHistory, getPaymentCode, readPdfFile } from "./server";
 require("dotenv").config();
-require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;

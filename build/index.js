@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("./server");
 require("dotenv").config();
-require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
