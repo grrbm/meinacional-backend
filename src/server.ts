@@ -7,7 +7,15 @@ const { PdfReader } = require("pdfreader");
 const path = require("path");
 
 const TIMEOUT_SECONDS = 30;
-const getMeiHistory = async (cnpj) => {
+export const getMeiHistory = async (
+  cnpj
+): Promise<{
+  success: boolean;
+  message?: string;
+  data?: any;
+  requestDurationSeconds?: any;
+  error?: string;
+}> => {
   let browser;
   try {
     puppeteer.use(StealthPlugin());
@@ -52,8 +60,11 @@ const getMeiHistory = async (cnpj) => {
       const cnpjInputSelector = `input[id='cnpj']`;
       const cnpjInput = await page.waitForSelector(cnpjInputSelector);
       await page.evaluate((cnpj) => {
-        const cnpjField = document.querySelector(`input[id='cnpj']`);
-        cnpjField.value = cnpj;
+        const cnpjField: HTMLInputElement | null =
+          document.querySelector(`input[id='cnpj']`);
+        if (cnpjField?.value) {
+          cnpjField.value = cnpj;
+        }
       }, cnpj);
       //await cnpjInput.type(myCnpj);
 
@@ -79,7 +90,7 @@ const getMeiHistory = async (cnpj) => {
       exampleArray.reverse();
       exampleArray.pop();
       const amountAvailableYears = exampleArray.length;
-      const allData = [];
+      const allData: Array<any> = [];
       for (let i = 0; i < amountAvailableYears; i++) {
         //wait for this selector because when it shows up the page is fully loaded
         await page.waitForSelector(`button.btn.dropdown-toggle`);
@@ -200,7 +211,11 @@ const getMeiHistory = async (cnpj) => {
     });
     const result = await Promise.race([timeoutPromise, meiHistoryPromise]);
     console.log("race finished");
-    return result;
+    return {
+      success: true,
+      data: result,
+      message: "race finished",
+    };
   } catch (err) {
     const result = {
       success: false,
@@ -214,7 +229,16 @@ const getMeiHistory = async (cnpj) => {
   }
 };
 
-const getPaymentCode = async (monthYear, cnpj) => {
+export const getPaymentCode = async (
+  monthYear,
+  cnpj
+): Promise<{
+  success: boolean;
+  data?: any;
+  message?: string;
+  requestDurationSeconds?: any;
+  error?: string;
+}> => {
   console.log("this is the monthYear: " + monthYear);
   const splitDate = monthYear.split("/");
   const month = splitDate[0];
@@ -233,7 +257,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
     });
     const page = await browser.newPage();
 
-    let timer = null;
+    let timer: any = null;
     const timeoutPromise = new Promise((resolve, reject) => {
       timer = setTimeout(async () => {
         console.log("just timed out");
@@ -255,8 +279,11 @@ const getPaymentCode = async (monthYear, cnpj) => {
       const cnpjInputSelector = `input[id='cnpj']`;
       const cnpjInput = await page.waitForSelector(cnpjInputSelector);
       await page.evaluate((cnpj) => {
-        const cnpjField = document.querySelector(`input[id='cnpj']`);
-        cnpjField.value = cnpj;
+        const cnpjField: HTMLInputElement | null =
+          document.querySelector(`input[id='cnpj']`);
+        if (cnpjField?.value) {
+          cnpjField.value = cnpj;
+        }
       }, cnpj);
       //await cnpjInput.type(myCnpj);
 
@@ -277,12 +304,12 @@ const getPaymentCode = async (monthYear, cnpj) => {
 
       console.log("going to perform find");
       const found = await page.evaluate((year) => {
-        const elements = document.querySelectorAll(
-          `li[data-original-index]:not([class^='disabled']) > a > span.text`
+        const elements: Array<HTMLElement> = Array.from(
+          document.querySelectorAll(
+            `li[data-original-index]:not([class^='disabled']) > a > span.text`
+          )
         );
-        const found = Array.from(elements).filter(
-          (elmt) => elmt.textContent === year
-        );
+        const found = elements.filter((elmt) => elmt.textContent === year);
         found[0].click();
         console.log("clicked !!");
         return found;
@@ -306,7 +333,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
          */
         const [notthispage, refreshedPage] = await browser.pages();
         const foundCheckbox = await refreshedPage.evaluate((monthYear) => {
-          const checkboxes = Array.from(
+          const checkboxes: Array<HTMLElement> = Array.from(
             document.querySelectorAll("tr.pa > td:nth-child(1) > input")
           );
           const months = Array.from(
@@ -347,6 +374,7 @@ const getPaymentCode = async (monthYear, cnpj) => {
             if (disposition && disposition.indexOf("attachment") !== -1) {
               var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
               var matches = filenameRegex.exec(disposition);
+              let filename;
               if (matches != null && matches[1]) {
                 filename = matches[1].replace(/['"]/g, "");
               }
@@ -411,13 +439,13 @@ const getPaymentCode = async (monthYear, cnpj) => {
     });
     const result = await Promise.race([timeoutPromise, paymentCodePromise]);
     console.log("race finished");
-    return result;
+    return { success: true, data: result, message: "race finished" };
   } catch (err) {
-    const result = {
+    return {
       success: false,
       error: "Internal Server Error: " + err,
+      message: "Internal Server Error: " + err,
     };
-    return result;
   } finally {
     if (browser) {
       await browser.close();
@@ -425,9 +453,15 @@ const getPaymentCode = async (monthYear, cnpj) => {
   }
 };
 
-const readPdfFile = async (
+export const readPdfFile = async (
   filename = "/Users/guilhermereis/Downloads/DAS-PGMEI-38294699000112-AC2022.pdf"
-) => {
+): Promise<{
+  success: boolean;
+  res1?: any;
+  res2?: any;
+  res3?: any;
+  res4?: any;
+}> => {
   return new Promise((resolve, reject) => {
     //
     try {

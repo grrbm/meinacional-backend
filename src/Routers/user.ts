@@ -1,6 +1,8 @@
-const express = require("express"),
-  router = express.Router({ mergeParams: true }),
-  User = require("../models/user");
+import express from "express";
+import { User } from "../User/model";
+import { UserType } from "../UserType/types";
+const { Op } = require("sequelize");
+const router = express.Router({ mergeParams: true });
 
 //(OK)TODO: user doesn't send back ALL data, such as passwords, tokens etc. to the frontend
 
@@ -12,12 +14,13 @@ const express = require("express"),
 router.get("/users", async (req, res) => {
   console.log("REQUEST ::  get all users");
   try {
-    const users = await User.find({});
-    return res.send(users);
+    const users: UserType[] = await User.findAll({});
+    res.send(users);
+    return;
   } catch (error) {
     return res.status(500).json({
       error: true,
-      message: e.toString(),
+      message: error.toString(),
     });
   }
 });
@@ -25,7 +28,7 @@ router.get("/users", async (req, res) => {
 // SHOW - get specific user
 router.get("/users/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ where: { id: req.params.id } });
     if (!user) {
       return res.status(404).send();
     }
@@ -52,11 +55,13 @@ router.post("/users", async (req, res) => {
     validated: req.body.validated,
   };
 
-  const alreadyExistent = await User.find({
-    $or: [{ email: newUser.email }, { username: newUser.username }],
+  const alreadyExistent = await User.findAll({
+    where: {
+      [Op.or]: [{ email: newUser.email }, { username: newUser.username }],
+    },
   });
 
-  console.log("alreadyExistent: " + alreadyExistent.username);
+  console.log("alreadyExistent: " + alreadyExistent[0].username);
   if (alreadyExistent.length > 0) {
     console.error(`STATUS :: Conflict`);
     return res.status(409).send();
@@ -65,7 +70,7 @@ router.post("/users", async (req, res) => {
   try {
     const user = new User(newUser);
     await user.save();
-    const token = await user.generateAuthToken();
+    const token = "somehardcodedtokengottaimplementthis"; //await user.generateAuthToken();
     res.status(201).send({ user, token });
     console.log(`STATUS :: Success`);
   } catch (e) {
@@ -96,14 +101,9 @@ router.patch("/users/:id", async (req, res) => {
     return res.status(400).send({ error: "Updates not valid !" });
   }
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ where: { id: req.params.id } });
+    /** TODO: Implement update user ! */
 
-    updates.forEach((update) => (user[update] = req.body[update]));
-    user.save();
-
-    if (!user) {
-      res.status(404).send({ error: "User not found" });
-    }
     res.send(user);
   } catch (e) {
     res.status(500).send({ error: e.toString() });
@@ -115,7 +115,7 @@ router.delete("/users/:id", async (req, res) => {
   const _id = req.params.id;
 
   try {
-    const user = await User.findByIdAndDelete(_id);
+    const user = await User.destroy({ where: { id: _id } });
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }

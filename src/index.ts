@@ -1,13 +1,18 @@
-const { getMeiHistory, getPaymentCode, readPdfFile } = require("./server.js");
+import { getMeiHistory, getPaymentCode, readPdfFile } from "./server";
 require("dotenv").config();
-require("./database/mongoose/index");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const maxConc = process.env.MAX_CONCURRENCY || 1;
 const { spawn } = require("child_process");
 const { Cluster } = require("puppeteer-cluster");
+const { syncModels } = require("./db");
 
+// --------------------------------------------------------------------
+// SYNC DATABASE
+// --------------------------------------------------------------------
+
+syncModels();
 // --------------------------------------------------------------------
 // PARSE JSON
 // --------------------------------------------------------------------
@@ -19,23 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 // ROUTES
 // --------------------------------------------------------------------
 
-const UserRouter = require("./database/routers/user");
+const UserRouter = require("./Routers/user");
 const proxy = "";
 app.use(proxy, UserRouter);
-
-// app.post("/meiHistory", async (req, res) => {
-//   if (!req.body.cnpj) {
-//     res.status(400).send("You need to supply CNPJ parameter");
-//     return;
-//   }
-
-//   if (success) {
-//     console.log("Sucess getting mei history !");
-//     res.status(200).send({ data, requestDurationSeconds });
-//   } else {
-//     res.status(500).send({ error });
-//   }
-// });
 
 app.post("/paymentCode", async (req, res) => {
   if (!req.body.monthYear || !req.body.cnpj) {
