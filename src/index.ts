@@ -97,19 +97,21 @@ app.post("/readPdfFile", async (req, res) => {
   app.post("/meiHistory", async function (req, res) {
     // cluster.execute will run the job with the workers in the pool. As there is only one worker
     // in the pool, the jobs will be run sequentially
+    console.log("just hit mei history endpoint.");
     try {
       //
+      console.log("executing puppeteer cluster.");
       const result = await cluster.execute(req.body.cnpj);
       res.status(200).send(result);
+      console.log("puppeteer cluster finished!");
+      return;
     } catch (err) {
       //
-      res
-        .status(500)
-        .send({
-          success: false,
-          message: "weird error !",
-          error: JSON.stringify(err) + " " + err.message,
-        });
+      res.status(500).send({
+        success: false,
+        message: "weird error !",
+        error: JSON.stringify(err) + " " + err.message,
+      });
     }
   });
 
