@@ -9,10 +9,12 @@ const { PdfReader } = require("pdfreader");
 const path = require("path");
 const TIMEOUT_SECONDS = 30;
 const getMeiHistory = async (cnpj) => {
+    console.log("executing pupp function");
     let browser;
     try {
         puppeteer.use(StealthPlugin());
         const startTime = Date.now();
+        console.log("gonna lauhcn browser");
         browser = await puppeteer.launch({
             headless: true,
             userDataDir: "./puppeteerDataDir",
@@ -21,6 +23,7 @@ const getMeiHistory = async (cnpj) => {
             ignoreHTTPSErrors: true,
             args: ["--no-sandbox"],
         });
+        console.log("browser laucnh successful");
         const page = await browser.newPage();
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(async () => {

@@ -16,10 +16,12 @@ export const getMeiHistory = async (
   requestDurationSeconds?: any;
   error?: string;
 }> => {
+  console.log("executing pupp function");
   let browser;
   try {
     puppeteer.use(StealthPlugin());
     const startTime = Date.now();
+    console.log("gonna lauhcn browser");
     browser = await puppeteer.launch({
       headless: true,
       userDataDir: "./puppeteerDataDir",
@@ -28,6 +30,7 @@ export const getMeiHistory = async (
       ignoreHTTPSErrors: true,
       args: ["--no-sandbox"],
     });
+    console.log("browser laucnh successful");
     const page = await browser.newPage();
 
     const timeoutPromise = new Promise((resolve, reject) => {
