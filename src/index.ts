@@ -24,23 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 // ROUTES
 // --------------------------------------------------------------------
 
-//const UserRouter = require("./database/routers/user");
-//const proxy = "";
-//app.use(proxy, UserRouter);
-
-// app.post("/meiHistory", async (req, res) => {
-//   if (!req.body.cnpj) {
-//     res.status(400).send("You need to supply CNPJ parameter");
-//     return;
-//   }
-
-//   if (success) {
-//     console.log("Sucess getting mei history !");
-//     res.status(200).send({ data, requestDurationSeconds });
-//   } else {
-//     res.status(500).send({ error });
-//   }
-// });
+const UserRouter = require("./Routers/user");
+const proxy = "";
+app.use(proxy, UserRouter);
 
 app.post("/paymentCode", async (req, res) => {
   if (!req.body.monthYear || !req.body.cnpj) {
