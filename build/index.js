@@ -21,9 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 // --------------------------------------------------------------------
 // ROUTES
 // --------------------------------------------------------------------
-const UserRouter = require("./database/routers/user");
-const proxy = "";
-app.use(proxy, UserRouter);
+//const UserRouter = require("./database/routers/user");
+//const proxy = "";
+//app.use(proxy, UserRouter);
 // app.post("/meiHistory", async (req, res) => {
 //   if (!req.body.cnpj) {
 //     res.status(400).send("You need to supply CNPJ parameter");
