@@ -96,7 +96,9 @@ app.post("/readPdfFile", async (req, res) => {
         }
         catch (err) {
             //
-            res.status(500).send("weird error !");
+            res
+                .status(500)
+                .send({ success: false, message: "weird error !", error: err });
         }
     });
     app.listen(port, () => {
