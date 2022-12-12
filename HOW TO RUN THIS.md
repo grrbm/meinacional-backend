@@ -14,7 +14,10 @@ node index.js
        git pull
        yarn reloadAll
 
-
+       if need be, restart the server:
+       Sudo reboot now
+       and mysql:
+       Sudo systemsctl restart mysql
 
 ## REBOOT THE SERVER
 

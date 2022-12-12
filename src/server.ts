@@ -32,6 +32,7 @@ export const getMeiHistory = async (
     });
     console.log("browser laucnh successful");
     const page = await browser.newPage();
+    console.log("spawned page");
 
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(async () => {
@@ -55,13 +56,17 @@ export const getMeiHistory = async (
         });
       }, TIMEOUT_SECONDS * 1000);
     });
+    console.log("gonna await mei history promise");
     const meiHistoryPromise = new Promise(async (resolve, reject) => {
+      console.log("going to the page");
       await page.goto(
         "http://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao"
       );
 
       const cnpjInputSelector = `input[id='cnpj']`;
+      console.log("waiting cnpj input");
       const cnpjInput = await page.waitForSelector(cnpjInputSelector);
+      console.log("found cnpj input");
       await page.evaluate((cnpj) => {
         const cnpjField: HTMLInputElement | null =
           document.querySelector(`input[id='cnpj']`);
