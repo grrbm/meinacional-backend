@@ -1,4 +1,4 @@
-const { getMeiHistory, getPaymentCode, readPdfFile } = require("./server.js");
+import { getMeiHistory, getPaymentCode, readPdfFile } from "./server";
 require("dotenv").config();
 require("./database/mongoose/index");
 const express = require("express");

@@ -1,5 +1,6 @@
 "use strict";
-const { getMeiHistory, getPaymentCode, readPdfFile } = require("./server.js");
+Object.defineProperty(exports, "__esModule", { value: true });
+const server_1 = require("./server");
 require("dotenv").config();
 require("./database/mongoose/index");
 const express = require("express");
@@ -43,7 +44,7 @@ app.post("/paymentCode", async (req, res) => {
             .send("You need to supply monthYear and cnpj parameters!");
     }
     console.log("got paymentCode request");
-    const { success, data, requestDurationSeconds, error } = await getPaymentCode(req.body.monthYear, req.body.cnpj);
+    const { success, data, requestDurationSeconds, error } = await (0, server_1.getPaymentCode)(req.body.monthYear, req.body.cnpj);
     if (success) {
         console.log("Sucess getting payment code !");
         res.status(200).send({ data, requestDurationSeconds });
@@ -58,7 +59,7 @@ app.post("/readPdfFile", async (req, res) => {
             .status(400)
             .send("You need to supply monthYear and cnpj parameters!");
     }
-    const { success, res1, res2, res3, res4 } = await readPdfFile();
+    const { success, res1, res2, res3, res4 } = await (0, server_1.readPdfFile)();
     if (success) {
         res.status(200).send({
             success,
@@ -80,7 +81,7 @@ app.post("/readPdfFile", async (req, res) => {
     // define your task (in this example we extract the title of the given page)
     await cluster.task(async ({ page, data: cnpj }) => {
         try {
-            const { success, data, requestDurationSeconds, error } = await getMeiHistory(cnpj);
+            const { success, data, requestDurationSeconds, error } = await (0, server_1.getMeiHistory)(cnpj);
             return {
                 success,
                 data,
