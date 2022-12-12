@@ -26,6 +26,8 @@ const getMeiHistory = async (cnpj) => {
         console.log("browser laucnh successful");
         const page = await browser.newPage();
         console.log("spawned page");
+        await page.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1");
+        console.log("page opened, going to url");
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(async () => {
                 console.log("just timed out");
