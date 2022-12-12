@@ -98,7 +98,11 @@ app.post("/readPdfFile", async (req, res) => {
             //
             res
                 .status(500)
-                .send({ success: false, message: "weird error !", error: err });
+                .send({
+                success: false,
+                message: "weird error !",
+                error: JSON.stringify(err) + " " + err.message,
+            });
         }
     });
     app.listen(port, () => {
