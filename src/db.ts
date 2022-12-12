@@ -25,14 +25,17 @@ const connectionInfo = {
 export const getAllModels = () => {
   return importFromFiles({
     files: findFiles("model", __dirname).map((x) => x.path),
+    /** to be imported, the export has to be a function */
     guard: (moduleExports) => typeof moduleExports === "function",
   });
 };
 
+console.log({ __dirname });
 export const sequelize = new Sequelize({
   dialect: "mysql",
   ...connectionInfo,
-  //models: getAllModels(),
+  //models: [__dirname + "/User"], // or [Player, Team],
+  models: getAllModels(),
   benchmark: false,
   // for logging slow queries
   logQueryParameters: false,

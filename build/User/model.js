@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const sequelize_1 = require("sequelize");
 const sequelize_typescript_1 = require("sequelize-typescript");
-let User = class User extends sequelize_1.Model {
+const DefaultModel_1 = require("../sensible-utilities/DefaultModel");
+let User = class User extends DefaultModel_1.DefaultModel {
 };
 __decorate([
     (0, sequelize_typescript_1.Index)({ unique: true }),
@@ -39,6 +40,15 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Index)({ unique: true }),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "phone", void 0);
 User = __decorate([
     sequelize_typescript_1.Table
 ], User);
