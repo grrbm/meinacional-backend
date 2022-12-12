@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "cluster": "NODE_ENV=production pm2 start index.js -i 1 --name meiserver",
+    "start": "node build/index.js",
+    "cluster": "NODE_ENV=production pm2 start build/index.js -i 1 --name meiserver",
     "clusterReload": "NODE_ENV=production pm2 reload meiserver",
-    "reloadAll": "git pull && yarn && yarn clusterReload"
+    "reloadAll": "git pull && yarn && yarn clusterReload",
+    "build": "tsc",
+    "dev": "tsc -w"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +31,8 @@
     "puppeteer-cluster": "^0.23.0",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "sequelize": "^6.26.0",
+    "sequelize-typescript": "^2.1.5",
     "shelljs": "^0.8.5",
     "validator": "^13.6.0",
     "xvfb": "^0.4.0"
