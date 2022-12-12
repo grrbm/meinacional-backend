@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const sequelize_1 = require("sequelize");
 const sequelize_typescript_1 = require("sequelize-typescript");
-let User = class User {
+let User = class User extends sequelize_1.Model {
 };
 __decorate([
     (0, sequelize_typescript_1.Index)({ unique: true }),
@@ -39,59 +39,6 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({ type: sequelize_1.DataTypes.STRING(1024) }),
-    __metadata("design:type", String)
-], User.prototype, "text", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Index)({ unique: true }),
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "phone", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "code", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "image", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({ type: sequelize_1.DataTypes.STRING(1024) }),
-    __metadata("design:type", String)
-], User.prototype, "base64", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "language", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "country", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "city", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({ type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false }),
-    __metadata("design:type", Boolean)
-], User.prototype, "verified", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({ type: sequelize_1.DataTypes.STRING(1024) }),
-    __metadata("design:type", String)
-], User.prototype, "subscribed", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "resetPasswordHash", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "paymentCustomerId", void 0);
 User = __decorate([
     sequelize_typescript_1.Table
 ], User);

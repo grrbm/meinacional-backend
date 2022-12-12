@@ -34,7 +34,7 @@ exports.getAllModels = getAllModels;
 exports.sequelize = new sequelize_typescript_1.Sequelize({
     dialect: "mysql",
     ...connectionInfo,
-    models: (0, exports.getAllModels)(),
+    //models: getAllModels(),
     benchmark: false,
     // for logging slow queries
     logQueryParameters: false,

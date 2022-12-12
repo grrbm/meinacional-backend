@@ -32,7 +32,7 @@ export const getAllModels = () => {
 export const sequelize = new Sequelize({
   dialect: "mysql",
   ...connectionInfo,
-  models: getAllModels(),
+  //models: getAllModels(),
   benchmark: false,
   // for logging slow queries
   logQueryParameters: false,
